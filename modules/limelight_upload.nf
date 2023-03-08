@@ -30,6 +30,9 @@ process UPLOAD_TO_LIMELIGHT {
 
     scans_param = "--scan-file=${(mzml_files as List).join(' --scan-file=')}"
 
+    search_description_param = search_long_name == null ? '' : "--search-description=\"${search_long_name}\""
+    search_short_label_param = search_short_name == null ? '' : "--search-description=\"${search_short_name}\""
+
     """
     echo "Submitting search results for Limelight import..."
         ${exec_java_command(task.memory)} \
@@ -38,8 +41,8 @@ process UPLOAD_TO_LIMELIGHT {
         --user-submit-import-key=\$LIMELIGHT_SUBMIT_UPLOAD_KEY \
         --project-id=${project_id} \
         --limelight-xml-file=${limelight_xml} \
-        --search-description="${search_long_name}" \
-        --search-short-label="${search_short_name}" \
+        ${search_description_param} \
+        ${search_short_label_param} \
         --path="${workflow.launchDir}" \
         ${scans_param} \
         ${tags_param} \

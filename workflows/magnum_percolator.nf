@@ -34,10 +34,10 @@ workflow wf_magnum_percolator {
         if (params.limelight_upload) {
 
             CONVERT_TO_LIMELIGHT_XML(
-                COMET.out.pepxml.collect(), 
+                MAGNUM.out.pepxml.collect(), 
                 PERCOLATOR.out.pout, 
                 fasta, 
-                new_comet_params
+                magnum_conf
             )
 
             UPLOAD_TO_LIMELIGHT(

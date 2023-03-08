@@ -1,19 +1,19 @@
 def exec_java_command(mem) {
     def xmx = "-Xmx${mem.toGiga()-1}G"
-    return "java -Djava.aws.headless=true ${xmx} -jar /usr/local/bin/cometPercolator2LimelightXML.jar"
+    return "java -Djava.aws.headless=true ${xmx} -jar /usr/local/bin/magnumToLimelightXML.jar"
 }
 
 process CONVERT_TO_LIMELIGHT_XML {
     publishDir "${params.result_dir}/limelight", failOnError: true, mode: 'copy'
     label 'process_low'
     label 'process_high_memory'
-    container 'mriffle/comet-percolator-to-limelight:2.7.6'
+    container 'mriffle/magnum-percolator-to-limelight:4.4.0'
 
     input:
         path pepxml
         path pout
         path fasta
-        path comet_params
+        path magnum_conf
 
     output:
         path("results.limelight.xml"), emit: limelight_xml
@@ -24,7 +24,8 @@ process CONVERT_TO_LIMELIGHT_XML {
     """
     echo "Running Limelight XML conversion..."
         ${exec_java_command(task.memory)} \
-        -c ${comet_params} \
+        -m ${pepxml} \
+        -c ${magnum_conf} \
         -f ${fasta} \
         -p ${pout} \
         -d . \
