@@ -28,7 +28,6 @@ process CONVERT_TO_LIMELIGHT_XML {
         -c ${magnum_conf} \
         -f ${fasta} \
         -p ${pout} \
-        -d . \
         -o results.limelight.xml \
         -v \
         1>limelight-xml-convert.stdout 2>limelight-xml-convert.stderr
