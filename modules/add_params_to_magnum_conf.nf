@@ -1,5 +1,6 @@
 process ADD_PARAMS_TO_MAGNUM_CONF {
-    publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy', pattern: '*[!.mzML]'
+    publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy', pattern: '*.stderr'
+    publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy', pattern: '*.conf'
     label 'process_low_constant'
     container "${workflow.profile == 'aws' ? 'public.ecr.aws/docker/library/ubuntu:22.04' : 'ubuntu:22.04'}"
 
