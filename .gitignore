@@ -1,0 +1,6 @@
+/test-data/.nextflow
+/test-data/.nextflow.log*
+/test-data/reports
+/test-data/work
+/test-data/results
+/test-data/.command.trace
