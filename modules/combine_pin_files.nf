@@ -13,7 +13,8 @@ process COMBINE_PIN_FILES {
     script:
     """
     echo "Combining percolator input files..."
-    python3 combine-percolator-input-files.py ${pin_files} \
+    python3 /usr/local/bin/combine-percolator-input-files.py \
+    ${pin_files} \
     >combined.filtered.pin 2>>combine-pin.stderr
     echo "Done!" # Needed for proper exit
     """
