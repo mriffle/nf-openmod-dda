@@ -17,12 +17,4 @@ process COMBINE_PIN_FILES {
     >combined.filtered.pin 2>>combine-pin.stderr
     echo "Done!" # Needed for proper exit
     """
-
-    """
-    echo "Combining pin files..."
-    $command
-    echo "DONE!" # Needed for proper exit
-    """
-
-
 }
