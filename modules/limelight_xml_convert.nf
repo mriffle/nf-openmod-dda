@@ -21,6 +21,9 @@ process CONVERT_TO_LIMELIGHT_XML {
         path("*.stderr"), emit: stderr
 
     script:
+    
+        magnum_files_param = "--magnum=${(pepxml as List).join(' --magnum=')}"
+
     """
     echo "Running Limelight XML conversion..."
         ${exec_java_command(task.memory)} \
