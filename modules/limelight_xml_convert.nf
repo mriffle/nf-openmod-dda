@@ -27,7 +27,7 @@ process CONVERT_TO_LIMELIGHT_XML {
     """
     echo "Running Limelight XML conversion..."
         ${exec_java_command(task.memory)} \
-        -m ${pepxml} \
+        ${magnum_files_param} \
         -c ${magnum_conf} \
         -f ${fasta} \
         -p ${pout} \
