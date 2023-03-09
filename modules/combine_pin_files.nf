@@ -1,7 +1,7 @@
 process COMBINE_PIN_FILES {
     publishDir "${params.result_dir}/percolator", failOnError: true, mode: 'copy'
     label 'process_low_constant'
-    container "${workflow.profile == 'aws' ? 'public.ecr.aws/docker/library/ubuntu:22.04' : 'ubuntu:22.04'}"
+    container "quay.io/protio/combine-percolator-input-files:1.0.0"
 
     input:
         path pin_files
@@ -11,17 +11,12 @@ process COMBINE_PIN_FILES {
         path("*.stderr"), emit: stderr
 
     script:
-    command = ''
-
-    // sort the files so subsequent runs of pipeline process files in same order
-    pin_files.sort().indexed().collect { index, item ->
-        if(index == 0) {
-            command = command + "cat $item >combined.filtered.pin 2>combine-pin.stderr\n"
-        } else {
-            command = command + "sed 1d $item >>combined.filtered.pin 2>>combine-pin.stderr\n"
-        }
-    }
-
+    """
+    echo "Combining percolator input files..."
+    python3 combine-percolator-input-files.py ${pin_files} \
+    >combined.filtered.pin 2>>combine-pin.stderr
+    echo "Done!" # Needed for proper exit
+    """
 
     """
     echo "Combining pin files..."
