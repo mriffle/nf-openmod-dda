@@ -43,6 +43,7 @@ workflow wf_magnum_percolator {
             UPLOAD_TO_LIMELIGHT(
                 CONVERT_TO_LIMELIGHT_XML.out.limelight_xml,
                 mzml_file_ch.collect(),
+                fasta,
                 params.limelight_webapp_url,
                 params.limelight_project_id,
                 params.limelight_search_description,
