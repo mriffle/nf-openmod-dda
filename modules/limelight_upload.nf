@@ -6,7 +6,7 @@ def exec_java_command(mem) {
 process UPLOAD_TO_LIMELIGHT {
     publishDir "${params.result_dir}/limelight", failOnError: true, mode: 'copy'
     label 'process_low'
-    container 'quay.io/protio/limelight-submit-import:4'
+    container 'quay.io/protio/limelight-submit-import:4.0.1'
 
     input:
         path limelight_xml
