@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflow Overview &mdash; nf-teirex-dda  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to Install the Workflow" href="how_to_install.html" />
+    <link rel="prev" title="TEI-REX Open Modification DDA Nextflow Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">TEI-REX Open Modification DDA Nextflow Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Workflow Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-components">Workflow Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-run">How to Run</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to Install the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_run.html">How to Run the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_parameters.html">Workflow Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Output &amp; Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_up_aws.html">How to Setup and Configure AWS Batch</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nf-teirex-dda</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Workflow Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="workflow-overview">
+<h1>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Permalink to this headline">¶</a></h1>
+<p>These documents describe a standardized Nextflow workflow for performing an <strong>open modification discovery DDA search</strong>. The source code for the workflow can be found at:
+<a class="reference external" href="https://github.com/mriffle/nf-openmod-dda">https://github.com/mriffle/nf-openmod-dda</a>.</p>
+<div class="section" id="workflow-components">
+<h2>Workflow Components<a class="headerlink" href="#workflow-components" title="Permalink to this headline">¶</a></h2>
+<p>The workflow is made up of the following software components, each may be run multiple times for different tasks.</p>
+<ul>
+<li><p class="first"><strong>PanoramaWeb</strong> (<a class="reference external" href="https://panoramaweb.org/home/project-begin.view">https://panoramaweb.org/home/project-begin.view</a>)</p>
+<p>Users may optionally use WebDAV URLs as locations for input data files in PanoramaWeb. The workflow will automatically download files as necessary.</p>
+</li>
+<li><p class="first"><strong>msconvert</strong> (<a class="reference external" href="https://proteowizard.sourceforge.io/">https://proteowizard.sourceforge.io/</a>)</p>
+<p>If users supply RAW files as input, they will be converted to mzML using <em>msconvert</em>.</p>
+</li>
+<li><p class="first"><strong>Magnum</strong> (<a class="reference external" href="https://magnum-ms.org/">https://magnum-ms.org/</a>)</p>
+<p>Magnum is the primary search program that identifies peptides and finds modifications present in the raw mass spectrometry data.</p>
+</li>
+<li><p class="first"><strong>Percolator</strong> (<a class="reference external" href="https://github.com/percolator/percolator">https://github.com/percolator/percolator</a>)</p>
+<p>Percolator is a widely-used program for post processing of proteomics search results that uses machine learning to apply
+false discovery rates associated with peptide identifications.</p>
+</li>
+<li><p class="first"><strong>Limelight XML Conversion</strong> (<a class="reference external" href="https://github.com/yeastrc/limelight-import-magnum-percolator">https://github.com/yeastrc/limelight-import-magnum-percolator</a>)</p>
+<blockquote>
+<div><p>The Limelight XML converter converts the native output of Comet and Percolator to Limelight XML, suitable for import into Limelight. This
+step will only run if uploading to Limelight is enabled.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Limelight</strong> (<a class="reference external" href="https://limelight-ms.org/">https://limelight-ms.org/</a>)</p>
+<blockquote>
+<div><p>Limelight is a web application for visualization, analysis, and sharing of proteomics results generated from mass spectrometry data. If
+uploading to Limelight is enabled, the results will be uploaded automatically to the specified Limelight instance.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="how-to-run">
+<h2>How to Run<a class="headerlink" href="#how-to-run" title="Permalink to this headline">¶</a></h2>
+<p>This workflow uses the Nextflow standardized workflow platform. The Nextflow platform emphasizes ease of use, workflow portability,
+and containerization of the individual steps. To run this workflow, <strong>you do not need to install any of the software components of
+the workflow</strong>. There is no need to worry about installing necessary software libararies, version incompatibilities, or compiling or
+installing complex and fickle software.</p>
+<p>To run the workflow you need only install Nextflow, which is relatively simple. To run the individual steps of the workflow on your
+own computer, you will need to install Docker. After these are installed, you will need to edit the pipeline configuration file to
+supply the locations of your data and execute a simple Nextflow command, such as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nextflow run -resume -r main mriffle/nf-openmod-dda -c pipeline.config
+</pre></div>
+</div>
+<p>The entire workflow will be run automatically, downloading Docker images as necessary, and the results output to
+the <code class="docutils literal notranslate"><span class="pre">results</span></code> directory. See <a class="reference internal" href="how_to_install.html"><span class="doc">How to Install the Workflow</span></a> for more details on how to install Nextflow and Docker. See
+<a class="reference internal" href="how_to_run.html"><span class="doc">How to Run the Workflow</span></a> for more details on how to run the workflow. And see <a class="reference internal" href="results.html"><span class="doc">Output &amp; Results</span></a> for more details on how to
+retrieve the results.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="TEI-REX Open Modification DDA Nextflow Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how_to_install.html" class="btn btn-neutral float-right" title="How to Install the Workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Riffle.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

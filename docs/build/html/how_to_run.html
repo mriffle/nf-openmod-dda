@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Run the Workflow &mdash; nf-teirex-dda  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Workflow Parameters" href="workflow_parameters.html" />
+    <link rel="prev" title="How to Install the Workflow" href="how_to_install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">TEI-REX DDA Nextflow Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Workflow Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to Install the Workflow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Run the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_parameters.html">Workflow Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Output &amp; Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_up_aws.html">How to Setup and Configure AWS Batch</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nf-teirex-dda</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to Run the Workflow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/how_to_run.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="how-to-run-the-workflow">
+<h1>How to Run the Workflow<a class="headerlink" href="#how-to-run-the-workflow" title="Permalink to this headline">¶</a></h1>
+<p>Follow these instructions to run the Nextflow Open Modification Discovery
+DDA workflow from your system. Note that your system must remain on for the
+duration of the running of the workflow. Even though the steps may be running
+on AWS Batch, your system still orchestrates the running of the steps.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">You must set up your system to run Nextflow first. Please see
+<a class="reference internal" href="how_to_install.html"><span class="doc">How to Install the Workflow</span></a> for more information. All commands will be
+typed in the command line. See <a class="reference internal" href="how_to_install.html"><span class="doc">How to Install the Workflow</span></a> for more
+information about how to get a command line.</p>
+</div>
+<p>Follow these steps to run a workflow:</p>
+<ol class="arabic">
+<li><p class="first">Create a directory that will be the “home” directory for this search. Example commands:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span>
+mkdir my-nextflow-run
+<span class="nb">cd</span> my-nextflow-run
+</pre></div>
+</div>
+<p>This will create a directory named <code class="docutils literal notranslate"><span class="pre">my-nextflow-run</span></code> in your home directory and move into that directory.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Copy in or create a pipeline.config file. A template can be found at: <a class="reference external" href="https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/pipeline.config">https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/pipeline.config</a></p>
+<blockquote>
+<div><p>Example command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/pipeline.config
+</pre></div>
+</div>
+<p>You may edit this config file in two ways:</p>
+<p><strong>Command Line</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano pipeline.config
+</pre></div>
+</div>
+<p>Use the commands displayed in the bottom of the window to save the file and close the editor when you are done. They will be <code class="docutils literal notranslate"><span class="pre">Control-O</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;Enter&gt;</span></code> to save and <code class="docutils literal notranslate"><span class="pre">Control-X</span></code> to exit.</p>
+<p><strong>GUI Editor in your Operating System:</strong></p>
+<blockquote>
+<div><p><em>MacOS or Linux</em>: You can directly edit <code class="docutils literal notranslate"><span class="pre">~/my-nextflow-run/pipeline.config</span></code> using your favorite GUI editor.</p>
+<p><em>Windows</em>: The file is a little tricky to find. In your file open dialogue, type in <code class="docutils literal notranslate"><span class="pre">\\wsl$\</span></code> and hit enter.
+This should reveal a <code class="docutils literal notranslate"><span class="pre">Ubuntu-22.04</span></code> directory (or something close to it). Go into that and double click on <code class="docutils literal notranslate"><span class="pre">home</span></code>, then double
+click on your username, then <code class="docutils literal notranslate"><span class="pre">my-nextflow-run</span></code>. The <code class="docutils literal notranslate"><span class="pre">pipeline.config</span></code> file should be present and you can edit it like a normal file.</p>
+</div></blockquote>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">For a complete desciption of all parameters see
+<a class="reference internal" href="workflow_parameters.html"><span class="doc">Workflow Parameters</span></a>.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Copy in or create a Magnum configuration file. A template can be found at: <a class="reference external" href="https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/Magnum.conf">https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/Magnum.conf</a></p>
+<blockquote>
+<div><p>This is the file used to configure Magnum. It contains many settings that should be reviewed and changed to search your particular data. For more information about Magnum parameters see: <a class="reference external" href="https://magnum-ms.org/param/index.html">https://magnum-ms.org/param/index.html</a></p>
+<p>Example command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/Magnum.conf
+</pre></div>
+</div>
+<p>You may edit this config file in two ways:</p>
+<p><strong>Command Line</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano Magnum.conf
+</pre></div>
+</div>
+<p>Use the commands displayed in the bottom of the window to save the file and close the editor when you are done. They will be <code class="docutils literal notranslate"><span class="pre">Control-O</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;Enter&gt;</span></code> to save and <code class="docutils literal notranslate"><span class="pre">Control-X</span></code> to exit.</p>
+<p><strong>GUI Editor in your Operating System:</strong></p>
+<blockquote>
+<div><p><em>MacOS or Linux</em>: You can directly edit <code class="docutils literal notranslate"><span class="pre">~/my-nextflow-run/Magnum.conf</span></code> using your favorite GUI editor.</p>
+<p><em>Windows</em>: The file is a little tricky to find. In your file open dialogue, type in <code class="docutils literal notranslate"><span class="pre">\\wsl$\</span></code> and hit enter.
+This should reveal a <code class="docutils literal notranslate"><span class="pre">Ubuntu-22.04</span></code> directory (or something close to it). Go into that and double click on <code class="docutils literal notranslate"><span class="pre">home</span></code>, then double
+click on your username, then <code class="docutils literal notranslate"><span class="pre">my-nextflow-run</span></code>. The <code class="docutils literal notranslate"><span class="pre">Magnum.conf</span></code> file should be present and you can edit it like a normal file.</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first">Run the workflow.</p>
+<p>Nextflow workflows may be run with a variety of <em>executors</em>. Executors are what run the actual steps of the pipeline; that is, they are
+the systems on which steps like Magnum and msconvert will be run. Examples of executors are your local computer, a computer cluster, or
+AWS Batch. The example below describes how to run the workflow using your local system or AWS Batch as the executor.</p>
+<p>A good first step is to ensure you have the latest version of the workflow. Execute this command:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nextflow pull -r main mriffle/nf-openmod-dda
+</pre></div>
+</div>
+</div></blockquote>
+<p>Then, to run the steps of the workflow on your <strong>local computer</strong>, execute this command:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nextflow run -resume -r main mriffle/nf-openmod-dda -c pipeline.config
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is important to only launch one workflow at a time if you are running on your local computer. Launching multiple
+workflows at once will result in multiple instances of the programs running at once. To run multiple workflows at
+once on your local system, you will need to implementing a queuing system such as <strong>Slurm</strong> and use the Slurm
+executor.</p>
+</div>
+</div></blockquote>
+<p>Alternatively, to run the workflow using <strong>AWS Batch</strong>, execute a command similar to:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nextflow run -resume -r main -profile aws mriffle/nf-openmod-dda -bucket-dir s3://bucket/dir -c pipeline.config
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">You must set up a AWS Batch cluster before running on AWS Batch. See <a class="reference internal" href="set_up_aws.html"><span class="doc">How to Setup and Configure AWS Batch</span></a> for more details about
+how to set up a AWS Batch cluster and the resulting parameters to set in your <code class="docutils literal notranslate"><span class="pre">pipeline.config</span></code> file.</p>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<ol class="arabic" start="4">
+<li><p class="first">Retrieve results.</p>
+<p>Your results will appear in the <code class="docutils literal notranslate"><span class="pre">results</span></code> sub directory of your current directory. See <a class="reference internal" href="results.html"><span class="doc">Output &amp; Results</span></a> for more
+information about the results that are generated.</p>
+</li>
+</ol>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="how_to_install.html" class="btn btn-neutral float-left" title="How to Install the Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="workflow_parameters.html" class="btn btn-neutral float-right" title="Workflow Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Riffle.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

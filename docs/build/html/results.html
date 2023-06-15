@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Output &amp; Results &mdash; nf-teirex-dda  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to Setup and Configure AWS Batch" href="set_up_aws.html" />
+    <link rel="prev" title="Workflow Parameters" href="workflow_parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">TEI-REX DDA Nextflow Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Workflow Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to Install the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_run.html">How to Run the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_parameters.html">Workflow Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Output &amp; Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-output">Command Line Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-log">Workflow Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-results">Workflow Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-files">Output Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#magnum-subdirectory"><code class="docutils literal notranslate"><span class="pre">magnum</span></code> Subdirectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#percolator-subdirectory"><code class="docutils literal notranslate"><span class="pre">percolator</span></code> Subdirectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limelight-subdirectory"><code class="docutils literal notranslate"><span class="pre">limelight</span></code> Subdirectory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="set_up_aws.html">How to Setup and Configure AWS Batch</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nf-teirex-dda</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Output &amp; Results</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/results.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="output-results">
+<h1>Output &amp; Results<a class="headerlink" href="#output-results" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="command-line-output">
+<h2>Command Line Output<a class="headerlink" href="#command-line-output" title="Permalink to this headline">¶</a></h2>
+<p>When running the workflow you should see output similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">results go here</span>
+</pre></div>
+</div>
+<p>The first line shows the version of Nextflow you are running. The second line shows the version of the workflow
+you are running. The third line shows the executor you are using. An executor in Nextflow describes the actual
+system the steps of the workflow are running on. In this case the <em>AWS Batch</em> executor was used.
+The next several lines show the actual steps of the workflow as they are running. If a particular step is run
+multiple times (e.g., converting many RAW files to mzML using msconvert), the percent complete shows the
+percentage of the RAW files that have been converted. The final four lines appear when the workflow completes,
+showing the completion time, how long it took, and the number
+of steps that succeeded.</p>
+</div>
+<div class="section" id="workflow-log">
+<h2>Workflow Log<a class="headerlink" href="#workflow-log" title="Permalink to this headline">¶</a></h2>
+<p>The log file called <code class="docutils literal notranslate"><span class="pre">.nextflow.log</span></code> will appear in the directory in which the workflow was run. It can be helpful
+for determining the cause of any problems. A log file will also be generated for each task executed by the workflow,
+which will be described below.</p>
+</div>
+<div class="section" id="workflow-results">
+<h2>Workflow Results<a class="headerlink" href="#workflow-results" title="Permalink to this headline">¶</a></h2>
+<p>All results will be output to the <code class="docutils literal notranslate"><span class="pre">results/nf-openmod-dda</span></code> subdirectory in the directory in which the workflow was
+run. In this directory is a subdirectory for each program that was run as part of the workflow. A full description
+of output files can be found below.</p>
+</div>
+<div class="section" id="output-files">
+<h2>Output Files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h2>
+<p>Below are each subdirectory created in <code class="docutils literal notranslate"><span class="pre">results/nf-openmod-dda</span></code> and a description of files
+that will be found in those directories.</p>
+<div class="section" id="magnum-subdirectory">
+<h3><code class="docutils literal notranslate"><span class="pre">magnum</span></code> Subdirectory<a class="headerlink" href="#magnum-subdirectory" title="Permalink to this headline">¶</a></h3>
+<p>This directory holds logs and output related to running Magnum. The following files are present:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">add-params-to-conf.stderr</span></code> - The workflow automatically adds the FASTA file and scan file to the <code class="docutils literal notranslate"><span class="pre">Magnum.conf</span></code> file. This file contains any errors generated by that step.</li>
+<li><code class="docutils literal notranslate"><span class="pre">magnum_fixed.conf</span></code> - This is the <code class="docutils literal notranslate"><span class="pre">Magnum.conf</span></code> file which has been modified with the above parameters.</li>
+</ul>
+<p>Then, for each input scan file (e.g., each input raw file), the following set of files will exist:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">scan_file_base.magnum.stderr</span></code> - The output of any errors generating by running Magnum on this scan file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">scan_file_base.magnum.stdout</span></code> - The standard output generated by Magnum for this scan file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">scan_file_base.pep.xml</span></code> - The results, in PepXML format, generated by Magnum for this scan file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">scan_file_base.perc.txt</span></code> - The Percolator input file generated by Magnum for this scan file.</li>
+</ul>
+</div>
+<div class="section" id="percolator-subdirectory">
+<h3><code class="docutils literal notranslate"><span class="pre">percolator</span></code> Subdirectory<a class="headerlink" href="#percolator-subdirectory" title="Permalink to this headline">¶</a></h3>
+<p>This directory holds logs and output related to running Percolator. The following files will be present:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">combined.filtered.pin</span></code> - The result of combining all the Percolator input files for each scan file into a single <code class="docutils literal notranslate"><span class="pre">.pin</span></code> file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">combine-pin.stderr</span></code> - Any error messages output by the process of combining <code class="docutils literal notranslate"><span class="pre">.pin</span></code> files.</li>
+<li><code class="docutils literal notranslate"><span class="pre">percolator.stderr</span></code> - Any error messages generated by running Percolator on the combined <code class="docutils literal notranslate"><span class="pre">.pin</span></code> file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">percolator.stdout</span></code> - The command line output generated by running Percolator on the combined <code class="docutils literal notranslate"><span class="pre">.pin</span></code> file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">combined.filtered.pout.xml</span></code> - The final results in XML format of running Percolator on the combined <code class="docutils literal notranslate"><span class="pre">.pin</span></code> file.</li>
+</ul>
+</div>
+<div class="section" id="limelight-subdirectory">
+<h3><code class="docutils literal notranslate"><span class="pre">limelight</span></code> Subdirectory<a class="headerlink" href="#limelight-subdirectory" title="Permalink to this headline">¶</a></h3>
+<p>This directory holds logs related to Limelight XML conversion and uploading to Limelight. The following files will be present:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">limelight-submit-upload.stderr</span></code> - Any error messages generated by uploading the search results to Limelight.</li>
+<li><code class="docutils literal notranslate"><span class="pre">limelight-submit-upload.stdout</span></code> - The standard command line output generated by the program that uploads data to Limelight.</li>
+<li><code class="docutils literal notranslate"><span class="pre">limelight-xml-convert.stderr</span></code> - Any error messages generated by converting the search results to Limelight XML.</li>
+<li><code class="docutils literal notranslate"><span class="pre">limelight-xml-convert.stdout</span></code> - The standard command line output generated by the program that converts search results to Limelight XML.</li>
+<li><code class="docutils literal notranslate"><span class="pre">results.limelight.xml</span></code> - The Limelight XML file generated by converting the search results. This format is necessary for uploading data to Limelight.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="workflow_parameters.html" class="btn btn-neutral float-left" title="Workflow Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="set_up_aws.html" class="btn btn-neutral float-right" title="How to Setup and Configure AWS Batch" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Riffle.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

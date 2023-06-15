@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflow Parameters &mdash; nf-teirex-dda  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Output &amp; Results" href="results.html" />
+    <link rel="prev" title="How to Run the Workflow" href="how_to_run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">TEI-REX DDA Nextflow Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Workflow Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to Install the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_run.html">How to Run the Workflow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Workflow Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-params-section">The <code class="docutils literal notranslate"><span class="pre">params</span></code> Section</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-profiles-section">The <code class="docutils literal notranslate"><span class="pre">profiles</span></code> Section</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-mail-section">The <code class="docutils literal notranslate"><span class="pre">mail</span></code> Section</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Output &amp; Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_up_aws.html">How to Setup and Configure AWS Batch</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nf-teirex-dda</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Workflow Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/workflow_parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="workflow-parameters">
+<h1>Workflow Parameters<a class="headerlink" href="#workflow-parameters" title="Permalink to this headline">¶</a></h1>
+<p>The workflow parameters should be included in a configuration file, an example
+of which can be found at
+<a class="reference external" href="https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/pipeline.config">https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/resources/pipeline.config</a></p>
+<p>The parameters in this file should be changed to indicate the locations of your data, the
+options you’d like to use for the software included in the workflow, and the capabilities and
+configuration for the system on which you are running the workflow steps.</p>
+<p>The configuration file is roughly organized as:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="o">}</span>
+
+<span class="n">profiles</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="o">}</span>
+
+<span class="n">mail</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">params</span></code> section includes locations of data and configuration options for a specific run of the workflow.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">profiles</span></code> sections includes parameters that describe the capabilities of the systems that run the steps of the workflow. For example, if running on your local system, this will include things like how many cores and how much RAM may be used by the steps of the workflow. This will not need to be changed for each run of the workflow.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">mail</span></code> section includes configuration options for sending email. This is optional and only necessary if you wish to send emails when the workflow completes. This will not need to be changed for each run of the workflow.</li>
+</ul>
+<p>Below is a complete description of all parameters that may be included in these sections.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This workflow can process files stored in <strong>PanoramaWeb</strong>. When specifying directories or file locations, any paths that begin with <code class="docutils literal notranslate"><span class="pre">https://</span></code> will be interpreted as being PanoramaWeb locations.</p>
+<p>For example, to process raw files stored in PanoramaWeb, you would have the following in your pipeline.config file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">quant_spectra_dir</span><span class="o">=</span> <span class="s1">&#39;https://panoramaweb.org/_webdav/path/to/@files/RawFiles/&#39;</span>
+</pre></div>
+</div>
+<p class="last">Where, <code class="docutils literal notranslate"><span class="pre">https://panoramaweb.org/_webdav/path/to/&#64;files/RawFiles/</span></code> is the WebDav URL of the folder on the Panorama server.</p>
+</div>
+<div class="section" id="the-params-section">
+<h2>The <code class="docutils literal notranslate"><span class="pre">params</span></code> Section<a class="headerlink" href="#the-params-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="table-1">
+<caption><span class="caption-text">Parameters for the <code class="docutils literal notranslate"><span class="pre">params</span></code> section</span><a class="headerlink" href="#table-1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="5%" />
+<col width="20%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Req?</th>
+<th class="head">Parameter Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">spectra_dir</span></code></td>
+<td>That path to the location of the raw or mzML files to be processed. This can be a directory location (e.g., <code class="docutils literal notranslate"><span class="pre">/data/mass_spec/my_raw_files/</span></code> or a Panorama WebDAV URL (described above).</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">fasta</span></code></td>
+<td>That path to the location of the FASTA file to be used in the Magnum search. This can be a directory location (e.g., <code class="docutils literal notranslate"><span class="pre">/data/mass_spec/my.fasta</span></code> or a Panorama WebDAV URL (described above).</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">magnum_conf</span></code></td>
+<td>That path to the location of the Magnum configuration file to be used in the Magnum search. This can be a directory location (e.g., <code class="docutils literal notranslate"><span class="pre">/data/mass_spec/Magnum.conf</span></code> or a Panorama WebDAV URL (described above). Default: <code class="docutils literal notranslate"><span class="pre">'Magnum.conf'</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_upload</span></code></td>
+<td>Set to <code class="docutils literal notranslate"><span class="pre">'true'</span></code> to upload to Limelight. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, the following Limelight-related parameters apply. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_project_id</span></code></td>
+<td>This is required if <code class="docutils literal notranslate"><span class="pre">limelight_upload</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This is the Limelight project ID to which to upload data.</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_webapp_url</span></code></td>
+<td>This is required if <code class="docutils literal notranslate"><span class="pre">limelight_upload</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This is the URL of the Limelight instance to which to upload data. E.g., <code class="docutils literal notranslate"><span class="pre">'https://limelight.yeastrc.org/limelight'</span></code>.</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_search_description</span></code></td>
+<td>This is required if <code class="docutils literal notranslate"><span class="pre">limelight_upload</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This is a one-line description of the search that will appear in Limelight.</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_search_short_name</span></code></td>
+<td>This is required if <code class="docutils literal notranslate"><span class="pre">limelight_upload</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This is a very brief one-word nickname for this search. Used in plots to label data.</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">limelight_tags</span></code></td>
+<td>Comma-delimited list of Limelight tags to use for this search (e.g., <code class="docutils literal notranslate"><span class="pre">'yeast,control,2023'</span></code>. Any tags present that haven’t been created in Limelight will be created in Limelight. Note: You can also specify
+categories for tags, and tags with the same tag categories will be grouped together in Limelight. For example, one could have a tag category called <code class="docutils literal notranslate"><span class="pre">treatment</span></code> and tags called <code class="docutils literal notranslate"><span class="pre">control</span></code> or <code class="docutils literal notranslate"><span class="pre">irradiated</span></code> as
+tags within this tag category. To specify a tag category use the tag category name then a tilda (~) then the tag name. E.g., <code class="docutils literal notranslate"><span class="pre">treatment~control,organism~yeast,year~2023</span></code>. Default: no tags will be sent.</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">email</span></code></td>
+<td>The email address to which a notification should be sent upon workflow completion. If no email is specified, no email will be sent. To send email, you must configure mail server settings (see below).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="the-profiles-section">
+<h2>The <code class="docutils literal notranslate"><span class="pre">profiles</span></code> Section<a class="headerlink" href="#the-profiles-section" title="Permalink to this headline">¶</a></h2>
+<p>The example configuration file includes this <code class="docutils literal notranslate"><span class="pre">profiles</span></code> section:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">profiles</span> <span class="o">{</span>
+
+    <span class="c1">// &quot;standard&quot; is the profile used when the steps of the workflow are run</span>
+    <span class="c1">// locally on your computer. These parameters should be changed to match</span>
+    <span class="c1">// your system resources (that you are willing to devote to running</span>
+    <span class="c1">// workflow jobs).</span>
+    <span class="n">standard</span> <span class="o">{</span>
+        <span class="n">params</span><span class="o">.</span><span class="na">max_memory</span> <span class="o">=</span> <span class="s1">&#39;8.GB&#39;</span>
+        <span class="n">params</span><span class="o">.</span><span class="na">max_cpus</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">params</span><span class="o">.</span><span class="na">max_time</span> <span class="o">=</span> <span class="s1">&#39;240.h&#39;</span>
+
+        <span class="n">params</span><span class="o">.</span><span class="na">mzml_cache_directory</span> <span class="o">=</span> <span class="s1">&#39;/data/mass_spec/nextflow/nf-teirex-dda/mzml_cache&#39;</span>
+        <span class="n">params</span><span class="o">.</span><span class="na">panorama_cache_directory</span> <span class="o">=</span> <span class="s1">&#39;/data/mass_spec/nextflow/panorama/raw_cache&#39;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>These parameters describe the capability of your local computer for running the steps of the workflow. Below is a description of each parameter:</p>
+<table border="1" class="docutils" id="table-2">
+<caption><span class="caption-text">Parameters for the <code class="docutils literal notranslate"><span class="pre">profiles/standard</span></code> section</span><a class="headerlink" href="#table-2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="5%" />
+<col width="20%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Req?</th>
+<th class="head">Parameter Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">params.max_memory</span></code></td>
+<td>The maximum amount of RAM that may be used by steps of the workflow. Default: 8 gigabytes.</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">params.max_cpus</span></code></td>
+<td>The number of cores that may be used by the workflow. Default: 4 cores.</td>
+</tr>
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">params.max_time</span></code></td>
+<td>The maximum amount of a time a step in the workflow may run before it is stopped and error generated. Default: 240 hours.</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">params.mzml_cache_directory</span></code></td>
+<td>When <code class="docutils literal notranslate"><span class="pre">msconvert</span></code> converts a RAW file to mzML, the mzML file is cached for future use. This specifies the directory in which the cached mzML files are stored.</td>
+</tr>
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">params.panorama_cache_directory</span></code></td>
+<td>If the RAW files to be processed are in PanoramaWeb, the RAW files will be downloaded to and cached in this directory for future use.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="the-mail-section">
+<h2>The <code class="docutils literal notranslate"><span class="pre">mail</span></code> Section<a class="headerlink" href="#the-mail-section" title="Permalink to this headline">¶</a></h2>
+<p>This is a more advanced and entirely optional set of parameters. When the workflow completes, it can optionally send an email to the address specified above in the <code class="docutils literal notranslate"><span class="pre">params</span></code> section.
+For this to work, the following parameters must be changed to match the settings of your email server. You may need to contact your IT department to obtain the appropriate settings.</p>
+<p>The example configuration file includes this <code class="docutils literal notranslate"><span class="pre">mail</span></code> section:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">mail</span> <span class="o">{</span>
+    <span class="n">from</span> <span class="o">=</span> <span class="s1">&#39;address@host.com&#39;</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">host</span> <span class="o">=</span> <span class="s1">&#39;smtp.host.com&#39;</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">port</span> <span class="o">=</span> <span class="mi">587</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="s1">&#39;smpt_user&#39;</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="s1">&#39;smtp_password&#39;</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">auth</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">starttls</span><span class="o">.</span><span class="na">enable</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="n">smtp</span><span class="o">.</span><span class="na">starttls</span><span class="o">.</span><span class="na">required</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="n">mail</span><span class="o">.</span><span class="na">smtp</span><span class="o">.</span><span class="na">ssl</span><span class="o">.</span><span class="na">protocols</span> <span class="o">=</span> <span class="s1">&#39;TLSv1.2&#39;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Below is a description of each parameter:</p>
+<table border="1" class="docutils" id="table-3">
+<caption><span class="caption-text">Parameters for the <code class="docutils literal notranslate"><span class="pre">profiles/standard</span></code> section</span><a class="headerlink" href="#table-3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="5%" />
+<col width="20%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Req?</th>
+<th class="head">Parameter Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">from</span></code></td>
+<td>The email address <strong>from</strong> which the email should be sent.</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.host</span></code></td>
+<td>The internet address (host name or ip address) of the email SMTP server.</td>
+</tr>
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.port</span></code></td>
+<td>The port on the host to connect to. Most likely will be <code class="docutils literal notranslate"><span class="pre">587</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.user</span></code></td>
+<td>If authentication is required, this is the username.</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.password</span></code></td>
+<td>If authentication is required, this is the password.</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.auth</span></code></td>
+<td>Whether or not (true or false) authentication is required.</td>
+</tr>
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.starttls.enable</span></code></td>
+<td>Whether or not to enable TLS support.</td>
+</tr>
+<tr class="row-odd"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.starttls.required</span></code></td>
+<td>Whether or not TLS is required.</td>
+</tr>
+<tr class="row-even"><td>✓</td>
+<td><code class="docutils literal notranslate"><span class="pre">smtp.ssl.protocols</span></code></td>
+<td>SSL protocol to use for sending SMTP messages.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="how_to_run.html" class="btn btn-neutral float-left" title="How to Run the Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="results.html" class="btn btn-neutral float-right" title="Output &amp; Results" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Riffle.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

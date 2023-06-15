@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Install the Workflow &mdash; nf-teirex-dda  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to Run the Workflow" href="how_to_run.html" />
+    <link rel="prev" title="Workflow Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">TEI-REX DDA Nextflow Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Workflow Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Install the Workflow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#if-on-windows">If On Windows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-windows-terminal">Install Windows Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-wsl2">Install WSL2</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-nextflow">Install Nextflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-placeholder-credentials">Set up placeholder credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-set-up-aws-cli-on-local-system">Optional: Set up AWS CLI on local system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-set-up-aws-credentials">Optional: Set up AWS credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-set-up-panoramaweb-credentials">Optional: Set up PanoramaWeb credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-set-up-limelight-credentials">Optional: Set up Limelight credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-install-docker-on-local-system">Optional: Install Docker on local system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-set-up-docker-credentials">Optional: Set up Docker credentials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_run.html">How to Run the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_parameters.html">Workflow Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Output &amp; Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_up_aws.html">How to Setup and Configure AWS Batch</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nf-teirex-dda</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to Install the Workflow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/how_to_install.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="how-to-install-the-workflow">
+<h1>How to Install the Workflow<a class="headerlink" href="#how-to-install-the-workflow" title="Permalink to this headline">¶</a></h1>
+<p>There are two parts to the Nextflow workflow:</p>
+<ol class="arabic simple">
+<li>The Nextflow system that orchestrates the worfklow</li>
+<li>The actual running of the programs that are part of the workflow</li>
+</ol>
+<p>These instructions will primarily describe how to install Nextflow on your computer so that you may start workflows using your computer. It does <strong>not</strong> assume that you will be running
+the individual computational steps on your computer. “Your computer” may refer to your personal workstation or a server you may log in to.</p>
+<p>Follow these steps to install Nextflow and its required components. These steps only need to be performed once.</p>
+<div class="section" id="if-on-windows">
+<h2>If On Windows<a class="headerlink" href="#if-on-windows" title="Permalink to this headline">¶</a></h2>
+<p>If you are on Windows, you may need to install two components: Windows Terminal and WSL2.</p>
+<div class="section" id="install-windows-terminal">
+<h3>Install Windows Terminal<a class="headerlink" href="#install-windows-terminal" title="Permalink to this headline">¶</a></h3>
+<p>To install Windows Terminal use Microsoft Store (<a class="reference external" href="https://apps.microsoft.com/store/apps">https://apps.microsoft.com/store/apps</a>). To learn more see: <a class="reference external" href="https://learn.microsoft.com/en-us/windows/terminal/install">https://learn.microsoft.com/en-us/windows/terminal/install</a>.</p>
+</div>
+<div class="section" id="install-wsl2">
+<h3>Install WSL2<a class="headerlink" href="#install-wsl2" title="Permalink to this headline">¶</a></h3>
+<p>Nextflow can only be run on a POSIX compatible operating system like Linux and MacOS. Users of Windows 10 and up may install WSL2 to natively run Linux apps in Windows. Follow these instructions from Microsoft to install WSL2 if it not installed: <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/install">https://learn.microsoft.com/en-us/windows/wsl/install</a></p>
+<p>Once installed you can easily access the command line of your new Ubuntu LTS installation by launching Windows Terminal and clicking the menu icon as depicted below. Note Ubuntu 20.04 may be a different version number on your system.</p>
+<img alt="_images/windows-terminal-ubuntu.png" src="_images/windows-terminal-ubuntu.png" />
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">All steps must be performed on the command line. If you are on MacOS or Linux, open a terminal and run the given commands. If you are on Windows, open a command line as described above.</p>
+</div>
+</div>
+</div>
+<div class="section" id="install-nextflow">
+<h2>Install Nextflow<a class="headerlink" href="#install-nextflow" title="Permalink to this headline">¶</a></h2>
+<p>Follow the instructions at: <a class="reference external" href="https://www.nextflow.io/docs/latest/getstarted.html">https://www.nextflow.io/docs/latest/getstarted.html</a>.</p>
+</div>
+<div class="section" id="set-up-placeholder-credentials">
+<h2>Set up placeholder credentials<a class="headerlink" href="#set-up-placeholder-credentials" title="Permalink to this headline">¶</a></h2>
+<p>The workflow currently needs a placeholder value for the secret key for PanoramaWeb to run. Enter the following on the command line where nextflow is being run:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nextflow</span> <span class="n">secrets</span> <span class="nb">set</span> <span class="n">PANORAMA_API_KEY</span> <span class="s2">&quot;PLACEHOLDER&quot;</span>
+<span class="n">nextflow</span> <span class="n">secrets</span> <span class="nb">set</span> <span class="n">LIMELIGHT_SUBMIT_UPLOAD_KEY</span> <span class="s2">&quot;PLACEHOLDER&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="optional-set-up-aws-cli-on-local-system">
+<h2>Optional: Set up AWS CLI on local system<a class="headerlink" href="#optional-set-up-aws-cli-on-local-system" title="Permalink to this headline">¶</a></h2>
+<p>This step needs to be performed if AWS Batch or S3 are going to be used.</p>
+<p>On <strong>Ubuntu</strong> (which you have if you follows the Windows directions above):</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">awscli</span>
+</pre></div>
+</div>
+<p>If you are on <strong>MacOS</strong> or another Linux distribution, follow Amazon’s directions here: <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a></p>
+</div>
+<div class="section" id="optional-set-up-aws-credentials">
+<h2>Optional: Set up AWS credentials<a class="headerlink" href="#optional-set-up-aws-credentials" title="Permalink to this headline">¶</a></h2>
+<p>If you are going to run workflows on AWS Batch or use S3, set up your AWS credentials.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Obtain the access key and secret key from the user’s AWS account. This can be found at <a class="reference external" href="https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/security_credentials">https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/security_credentials</a>?section=IAM_credentials. After logging in, click the “Create access key” button in the “Access keys” section, choose the “Command Line Interface” option, optionally give the access key a name, then create the key. Then copy and paste the access key and secret access key to a text editor for the next part.</li>
+<li><dl class="first docutils">
+<dt>On the local system, run: <code class="docutils literal notranslate"><span class="pre">aws</span> <span class="pre">configure</span></code></dt>
+<dd>Enter the access key for “AWS Access Key ID”.
+Enter the secret key for “AWS Secret Access Key”.
+Hit &lt;ENTER&gt; for the other options.</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<p>Detailed instructions can be found at: <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html</a>.</p>
+</div>
+<div class="section" id="optional-set-up-panoramaweb-credentials">
+<h2>Optional: Set up PanoramaWeb credentials<a class="headerlink" href="#optional-set-up-panoramaweb-credentials" title="Permalink to this headline">¶</a></h2>
+<p>If you will be downloading files from Panorama for processing, you will need to set up your Panorama API key. Follow these instructions:</p>
+<ol class="arabic">
+<li><p class="first">After logging into PanoramaWeb, click the user-shaped icon in the top-right next to your username and choose “External Tool Access”.</p>
+</li>
+<li><p class="first">Click “Generate API Key” then “Copy To Clipboard”.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Then on the local system, run:</dt>
+<dd><p class="first last"><code class="docutils literal notranslate"><span class="pre">nextflow</span> <span class="pre">secrets</span> <span class="pre">set</span> <span class="pre">PANORAMA_API_KEY</span> <span class="pre">&quot;xxxxxxxxxxxxxxxxxxxxxxxx&quot;</span></code></p>
+</dd>
+</dl>
+<p><strong>Be sure to replace “xxxxxxxxxxxxxxxxxxxxxxxx” with your access key.</strong></p>
+</li>
+</ol>
+</div>
+<div class="section" id="optional-set-up-limelight-credentials">
+<h2>Optional: Set up Limelight credentials<a class="headerlink" href="#optional-set-up-limelight-credentials" title="Permalink to this headline">¶</a></h2>
+<p>If you are going to upload the results of the workflow to Limelight for visualization, analysis, and sharing, you will need to set up your Limelight credentials so the workflow has permissions to upload data to your account.</p>
+<p>Follow these steps:</p>
+<ol class="arabic">
+<li><p class="first">Log into Limelight</p>
+</li>
+<li><p class="first">Access any project by clicking on that project’s link on the start page</p>
+</li>
+<li><p class="first">Expand the “Upload Data” section and click on “Command Line Import Info”</p>
+</li>
+<li><p class="first">Click the “Show Key” button and copy the key to the clipboard. It is all the letters and numbers to the right of <code class="docutils literal notranslate"><span class="pre">--user-submit-import-key=</span></code>. It should appear in a similar form as: <code class="docutils literal notranslate"><span class="pre">xd7263ddb8177d4xyzd374594b769f751100jj83777</span></code></p>
+</li>
+<li><p class="first">Then, on the command line of the local system run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nextflow secrets <span class="nb">set</span> LIMELIGHT_SUBMIT_UPLOAD_KEY <span class="s2">&quot;xxxxxxxxxx&quot;</span>
+</pre></div>
+</div>
+<p><strong>Replace xxxxxxxxxx with the access key you copied to your clipboard.</strong></p>
+</li>
+</ol>
+</div>
+<div class="section" id="optional-install-docker-on-local-system">
+<h2>Optional: Install Docker on local system<a class="headerlink" href="#optional-install-docker-on-local-system" title="Permalink to this headline">¶</a></h2>
+<p>This step needs to be performed if processes (e.g., Magnum) are going to be run on your local computer. That is, the actual processing steps will be run locally.</p>
+<p>Follow the Docker install guide at: <a class="reference external" href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+</div>
+<div class="section" id="optional-set-up-docker-credentials">
+<h2>Optional: Set up Docker credentials<a class="headerlink" href="#optional-set-up-docker-credentials" title="Permalink to this headline">¶</a></h2>
+<p>If you installed Docker and are going to be running the steps of the workflow on the local system (e.g. running Magnum on your computer), you will need access to execute Docker containers without having to use sudo. Instructions to set this up can be found at <a class="reference external" href="https://docs.docker.com/engine/install/linux-postinstall/">https://docs.docker.com/engine/install/linux-postinstall/</a>, under the heading “Manage Docker as a non-root user”.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Workflow Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how_to_run.html" class="btn btn-neutral float-right" title="How to Run the Workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Riffle.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
