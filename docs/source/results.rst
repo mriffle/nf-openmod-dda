@@ -8,7 +8,19 @@ When running the workflow you should see output similar to:
 
 .. code-block:: console
 
-    results go here
+    Launching `https://github.com/mriffle/nf-openmod-dda` [deadly_swanson] DSL2 - revision: cedbe21973 [main]
+    executor >  awsbatch (10)
+    [7d/ff54be] process > wf_magnum_percolator:MSCONVERT (2)                 [100%] 2 of 2 ✔
+    [f6/f9330c] process > wf_magnum_percolator:ADD_PARAMS_TO_MAGNUM_CONF (2) [100%] 2 of 2 ✔
+    [d2/d2ab30] process > wf_magnum_percolator:MAGNUM (2)                    [100%] 2 of 2 ✔
+    [6e/1c901f] process > wf_magnum_percolator:COMBINE_PIN_FILES             [100%] 1 of 1 ✔
+    [86/898518] process > wf_magnum_percolator:PERCOLATOR                    [100%] 1 of 1 ✔
+    [2d/af2776] process > wf_magnum_percolator:CONVERT_TO_LIMELIGHT_XML      [100%] 1 of 1 ✔
+    [48/11a8d6] process > wf_magnum_percolator:UPLOAD_TO_LIMELIGHT           [100%] 1 of 1 ✔
+    Completed at: 15-Jun-2023 18:38:42
+    Duration    : 3h 38m 13s
+    CPU hours   : 133.8
+    Succeeded   : 10
 
 The first line shows the version of Nextflow you are running. The second line shows the version of the workflow
 you are running. The third line shows the executor you are using. An executor in Nextflow describes the actual
