@@ -17,7 +17,7 @@ process MAGNUM {
     """
     echo "Running magnum..."
     magnum magnum_fixed.conf \
-        1>${mzml_file.baseName}.magnum.stdout 2>${mzml_file.baseName}.magnum.stderr
+        > >(tee "${mzml_file.baseName}.magnum.stdout") 2> >(tee "${mzml_file.baseName}.magnum.stderr" >&2)
 
     echo "DONE!" # Needed for proper exit
     """
