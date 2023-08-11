@@ -18,7 +18,7 @@ process PERCOLATOR {
     percolator \
         -X "${pin_file.baseName}.pout.xml" \
         ${pin_file} \
-        >percolator.stdout 2>percolator.stderr
+        > >(tee "percolator.stdout") 2> >(tee "percolator.stderr" >&2)
     echo "Done!" # Needed for proper exit
     """
 

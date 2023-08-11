@@ -33,7 +33,7 @@ process CONVERT_TO_LIMELIGHT_XML {
         -p ${pout} \
         -o results.limelight.xml \
         -v \
-        1>limelight-xml-convert.stdout 2>limelight-xml-convert.stderr
+        > >(tee "limelight-xml-convert.stdout") 2> >(tee "limelight-xml-convert.stderr" >&2)
 
     echo "Done!" # Needed for proper exit
     """

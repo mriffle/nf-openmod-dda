@@ -48,7 +48,8 @@ process UPLOAD_TO_LIMELIGHT {
         --path="${workflow.launchDir}" \
         ${scans_param} \
         ${tags_param} \
-        1>limelight-submit-upload.stdout 2>limelight-submit-upload.stderr
+        > >(tee "limelight-submit-upload.stdout") 2> >(tee "limelight-submit-upload.stderr" >&2)
+        
     echo "Done!" # Needed for proper exit
     """
 }

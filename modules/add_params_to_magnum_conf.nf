@@ -19,8 +19,8 @@ process ADD_PARAMS_TO_MAGNUM_CONF {
     """
     echo "Adding FASTA and mzML to magnum conf..."
 
-    sed -e 's/database = \\S\\+/database = $fasta/g' $magnum_conf >magnum_tmp.conf 2>add-params-to-conf.stderr
-    sed -e 's/MS_data_file = \\S\\+/MS_data_file = $mzml_file/g' magnum_tmp.conf >magnum_fixed.conf 2>>add-params-to-conf.stderr
+    sed -e 's/database = \\S\\+/database = $fasta/g' $magnum_conf >magnum_tmp.conf 2> >(tee add-params-to-conf.stderr >&2)
+    sed -e 's/MS_data_file = \\S\\+/MS_data_file = $mzml_file/g' magnum_tmp.conf >magnum_fixed.conf 2>> >(tee add-params-to-conf.stderr >&2)
 
     echo "DONE!" # Needed for proper exit
     """
