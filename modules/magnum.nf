@@ -1,7 +1,7 @@
 process MAGNUM {
     publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy'
     label 'process_high_constant'
-    container 'quay.io/protio/magnum:1.3.2'
+    container 'quay.io/protio/magnum:1.3.3'
 
     input:
         tuple path(mzml_file), path(magnum_conf)
