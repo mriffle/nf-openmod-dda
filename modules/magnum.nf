@@ -12,6 +12,7 @@ process MAGNUM {
         path("*.perc.txt"), emit: pin
         path("*.stdout"), emit: stdout
         path("*.stderr"), emit: stderr
+        path("*.diag.xml"), emit: diagxml, optional: true
 
     script:
     """
