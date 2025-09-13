@@ -1,7 +1,7 @@
 process MAGNUM {
     publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy'
     label 'process_high_constant'
-    container 'quay.io/protio/magnum:1.6.2'
+    container params.images.magnum
 
     input:
         tuple path(mzml_file), path(magnum_conf)
@@ -27,5 +27,7 @@ process MAGNUM {
     """
     touch "${mzml_file.baseName}.pep.xml"
     touch "${mzml_file.baseName}.perc.txt"
+    touch "${mzml_file.baseName}.magnum.stdout"
+    touch "${mzml_file.baseName}.magnum.stderr"
     """
 }

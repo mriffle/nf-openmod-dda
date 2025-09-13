@@ -7,7 +7,7 @@ def exec_java_command(mem) {
 
 process PANORAMA_GET_RAW_FILE_LIST {
     label 'process_low_constant'
-    container 'mriffle/panorama-client:1.0.0'
+    container params.images.panorama_client
     publishDir "${params.result_dir}/panorama", failOnError: true, mode: 'copy'
 
     input:
@@ -35,13 +35,15 @@ process PANORAMA_GET_RAW_FILE_LIST {
 
     stub:
     """
-    touch "panorama_files.txt"
+    touch "placeholder.download"
+    touch "panorama-get-files.stdout"
+    touch "panorama-get-files.stderr"
     """
 }
 
 process PANORAMA_GET_FASTA {
     label 'process_low_constant'
-    container 'mriffle/panorama-client:1.0.0'
+    container params.images.panorama_client
     publishDir "${params.result_dir}/panorama", failOnError: true, mode: 'copy', pattern: "*.stdout"
     publishDir "${params.result_dir}/panorama", failOnError: true, mode: 'copy', pattern: "*.stderr"
 
@@ -66,14 +68,19 @@ process PANORAMA_GET_FASTA {
         """
 
     stub:
-    """
-    touch "{$file(web_dav_dir_url).name}"
-    """
+    {
+        def file_name = file(web_dav_dir_url).name
+        """
+        touch "${file_name}"
+        touch "panorama-get-${file_name}.stdout"
+        touch "panorama-get-${file_name}.stderr"
+        """
+    }
 }
 
 process PANORAMA_GET_COMET_PARAMS {
     label 'process_low_constant'
-    container 'mriffle/panorama-client:1.0.0'
+    container params.images.panorama_client
     publishDir "${params.result_dir}/panorama", failOnError: true, mode: 'copy', pattern: "*.stdout"
     publishDir "${params.result_dir}/panorama", failOnError: true, mode: 'copy', pattern: "*.stderr"
 
@@ -98,14 +105,19 @@ process PANORAMA_GET_COMET_PARAMS {
         """
 
     stub:
-    """
-    touch "{$file(web_dav_dir_url).name}"
-    """
+    {
+        def file_name = file(web_dav_dir_url).name
+        """
+        touch "${file_name}"
+        touch "panorama-get-${file_name}.stdout"
+        touch "panorama-get-${file_name}.stderr"
+        """
+    }
 }
 
 process PANORAMA_GET_RAW_FILE {
     label 'process_low_constant'
-    container 'quay.io/protio/panorama-client:1.0.0'
+    container params.images.panorama_client
     storeDir "${params.panorama_cache_directory}"
 
     input:
@@ -129,7 +141,12 @@ process PANORAMA_GET_RAW_FILE {
         """
 
     stub:
-    """
-    touch "{$download_file_placeholder.baseName}"
-    """
+    {
+        def raw_file_name = download_file_placeholder.baseName
+        """
+        touch "${raw_file_name}"
+        touch "panorama-get-${raw_file_name}.stdout"
+        touch "panorama-get-${raw_file_name}.stderr"
+        """
+    }
 }

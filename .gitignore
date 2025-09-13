@@ -4,3 +4,10 @@
 /test-data/work
 /test-data/results
 /test-data/.command.trace
+
+# Nextflow generated files
+.nextflow/
+.nextflow.log*
+work/
+results/
+reports/

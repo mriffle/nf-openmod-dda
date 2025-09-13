@@ -2,7 +2,7 @@ process PERCOLATOR {
     publishDir "${params.result_dir}/percolator", failOnError: true, mode: 'copy'
     label 'process_medium'
     label 'process_high_memory'
-    container 'quay.io/protio/percolator:3.05'
+    container params.images.percolator
 
     input:
         path pin_file
@@ -25,5 +25,7 @@ process PERCOLATOR {
     stub:
     """
     touch "${pin_file.baseName}.pout.xml"
+    touch "percolator.stdout"
+    touch "percolator.stderr"
     """
 }

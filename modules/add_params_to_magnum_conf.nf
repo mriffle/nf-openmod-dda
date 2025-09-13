@@ -2,7 +2,7 @@ process ADD_PARAMS_TO_MAGNUM_CONF {
     publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy', pattern: '*.stderr'
     publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy', pattern: '*.conf'
     label 'process_low_constant'
-    container "${workflow.profile == 'aws' ? 'public.ecr.aws/docker/library/ubuntu:22.04' : 'ubuntu:22.04'}"
+    container params.images.ubuntu
 
     input:
         path magnum_conf
@@ -23,5 +23,11 @@ process ADD_PARAMS_TO_MAGNUM_CONF {
     sed -e 's/MS_data_file = \\S\\+/MS_data_file = $mzml_file/g' magnum_tmp.conf >magnum_fixed.conf 2>> >(tee add-params-to-conf.stderr >&2)
 
     echo "DONE!" # Needed for proper exit
+    """
+
+    stub:
+    """
+    touch "magnum_fixed.conf"
+    touch "add-params-to-conf.stderr"
     """
 }

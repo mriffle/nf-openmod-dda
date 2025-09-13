@@ -6,7 +6,7 @@ def exec_java_command(mem) {
 process UPLOAD_TO_LIMELIGHT {
     publishDir "${params.result_dir}/limelight", failOnError: true, mode: 'copy'
     label 'process_low'
-    container 'quay.io/protio/limelight-submit-import:4.0.1'
+    container params.images.limelight_submit
 
     input:
         path limelight_xml
@@ -51,5 +51,11 @@ process UPLOAD_TO_LIMELIGHT {
         > >(tee "limelight-submit-upload.stdout") 2> >(tee "limelight-submit-upload.stderr" >&2)
         
     echo "Done!" # Needed for proper exit
+    """
+
+    stub:
+    """
+    touch "limelight-submit-upload.stdout"
+    touch "limelight-submit-upload.stderr"
     """
 }

@@ -1,7 +1,7 @@
 process COMBINE_PIN_FILES {
     publishDir "${params.result_dir}/percolator", failOnError: true, mode: 'copy'
     label 'process_low_constant'
-    container "quay.io/protio/combine-percolator-input-files:1.0.0"
+    container params.images.combine_percolator_input
 
     input:
         path pin_files
@@ -17,5 +17,11 @@ process COMBINE_PIN_FILES {
     ${pin_files} \
     >combined.filtered.pin 2>> >(tee combine-pin.stderr >&2)
     echo "Done!" # Needed for proper exit
+    """
+
+    stub:
+    """
+    touch "combined.filtered.pin"
+    touch "combine-pin.stderr"
     """
 }

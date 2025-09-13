@@ -8,7 +8,7 @@ process CONVERT_TO_LIMELIGHT_XML {
     label 'process_low'
     label 'process_high_memory'
     label 'process_long'
-    container 'mriffle/magnum-percolator-to-limelight:4.4.0'
+    container params.images.magnum_to_limelight
 
     input:
         path pepxml
@@ -42,5 +42,7 @@ process CONVERT_TO_LIMELIGHT_XML {
     stub:
     """
     touch "results.limelight.xml"
+    touch "limelight-xml-convert.stdout"
+    touch "limelight-xml-convert.stderr"
     """
 }
