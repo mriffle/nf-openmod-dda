@@ -66,6 +66,13 @@ The ``params`` Section
      - ``magnum_conf``
      - That path to the location of the Magnum configuration file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/Magnum.conf`` or a Panorama WebDAV URL (described above). Default: ``'Magnum.conf'``.
    * - 
+     - ``process_separately``
+     - Set to ``true`` to run Percolator and Limelight upload separately for each input file. If ``false``, results are combined before running Percolator and uploading to Limelight. Default: ``false``.
+
+       .. note::
+
+          Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run.
+   * - 
      - ``limelight_upload``
      - Set to ``'true'`` to upload to Limelight. If set to ``true``, the following Limelight-related parameters apply. Default: ``false``.
    * - 
@@ -76,10 +83,10 @@ The ``params`` Section
      - This is required if ``limelight_upload`` is set to ``true``. This is the URL of the Limelight instance to which to upload data. E.g., ``'https://limelight.yeastrc.org/limelight'``.
    * - 
      - ``limelight_search_description``
-     - This is required if ``limelight_upload`` is set to ``true``. This is a one-line description of the search that will appear in Limelight. 
+     - This is required if ``limelight_upload`` is set to ``true``. This is a one-line description of the search that will appear in Limelight. If ``process_separately`` is set to ``true``, the base name of the raw/mzML file will be appended to this description. 
    * - 
      - ``limelight_search_short_name``
-     - This is required if ``limelight_upload`` is set to ``true``. This is a very brief one-word nickname for this search. Used in plots to label data.
+     - This is required if ``limelight_upload`` is set to ``true``. This is a very brief one-word nickname for this search. Used in plots to label data. This is ignored if ``process_separately`` is set to ``true``.
    * - 
      - ``limelight_tags``
      - Comma-delimited list of Limelight tags to use for this search (e.g., ``'yeast,control,2023'``. Any tags present that haven't been created in Limelight will be created in Limelight. Note: You can also specify
