@@ -3,6 +3,9 @@ A Nextflow workflow for performing an open modification search and
 optional subsequent upload to Limelight (https://limelight-ms.org/)
 for visualization, sharing, and analysis.
 
+## Documentation
+Full documentation can be found at https://nf-openmod-dda.readthedocs.io/.
+
 The workflow currently runs:
 
 - msconvert (if raw files are used as input) (https://proteowizard.sourceforge.io/index.html)
