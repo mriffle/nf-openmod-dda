@@ -8,9 +8,10 @@ process MSCONVERT {
         path raw_file
 
     output:
-        tuple val(raw_file.baseName), path("${raw_file.baseName}.mzML"), emit: mzml
+        tuple val(sample_id), path("${raw_file.baseName}.mzML"), emit: mzml
 
     script:
+    sample_id = raw_file.baseName
     """
     wine msconvert \
         ${raw_file} \
@@ -22,6 +23,7 @@ process MSCONVERT {
     """
 
     stub:
+    sample_id = raw_file.baseName
     """
     touch ${raw_file.baseName}.mzML
     """
