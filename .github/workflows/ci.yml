@@ -28,4 +28,4 @@ jobs:
         run: |
           nextflow secrets set PANORAMA_API_KEY "PLACEHOLDER"
           nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "PLACEHOLDER"
-          nextflow run main.nf -profile standard -stub --fasta test-data/test.fasta --spectra_dir test-data --magnum_conf example_files/Magnum.conf --limelight_upload=true --limelight_webapp_url=foo --limelight_project_id=0 --limelight_search_description=foo --limelight_search_short_name=bar --limelight_tags=stubs
+          nextflow run main.nf -profile standard -stub -c conf/test.config
