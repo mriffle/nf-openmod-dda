@@ -17,6 +17,7 @@ This workflow accepts the following parameters:
 - `magnum_conf` - `required` Path to the Magnum conf file to use for the search. See https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/example_files/Magnum.conf for example `Magnum.conf`.
 - `fasta` - `required` Path to the FASTA file
 - `spectra_dir` - `required` Path to a directory containing either raw or mzML files. If mzML files are found, raw files will be ignored. 
+- `process_separately` - `(optional)` Set to `true` to run Percolator and Limelight upload separately for each input file. If `false` (the default), results from all input files are combined before running Percolator and uploading to Limelight. Note: Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run. Default: `false`.
 - `email` - To whom a completion email should be sent. Exclude this parameter to send no email. Default is to send no email.
 - `limelight_upload` - Leave out or set to false to not upload to Limelight. Set to true to upload to Limelight.
 
@@ -65,15 +66,21 @@ Use the following command(s) to run the workflow:
   `nextflow run -r main mriffle/nf-openmod-dda -c pipeline.config`
 
 ## Output
-The output of the pipeline will be placed in the `results/nf-openmod-dda` directory (relative to where the workflow was run). BASENAME is the base part of the mzML or raw filename (e.g., my_file.raw would have a BASENAME of "my_file"):
+The output of the pipeline will be placed in the `results/nf-openmod-dda` directory (relative to where the workflow was run). `BASENAME` is the base part of the mzML or raw filename (e.g., `my_file.raw` would have a `BASENAME` of `my_file`):
+
 - `magnum/magnum_fixed.conf` - Magnum conf file after modification by the workflow (adding in the FASTA and mzML files).
 - `magnum/BASENAME.pep.xml` - Magnum results in PepXML format.
 - `magnum/BASENAME.perc.txt` - Magnum results as input to Percolator.
-- `percolator/combined.filtered.pin` - Percolator input file resulting from combining all percolator input files (if more than one).
-- `percolator/combined.filtered.pout.xml` - Percolator PSM and peptide results.
 
-If the data were uploaded to Limelight:
-- `limelight/results.limelight.xml` - The Limeight XML representation of the Percolator and Magnum results.
+If `process_separately` is `false` (default):
+- `percolator/combined.filtered.pin` - Percolator input file resulting from combining all percolator input files.
+- `percolator/combined.filtered.pout.xml` - Percolator PSM and peptide results for the combined data.
+- `limelight/results.limelight.xml` - The Limelight XML representation of the combined results (if uploading to Limelight).
+
+If `process_separately` is `true`:
+- `percolator/BASENAME.filtered.pin` - Percolator input file for each respective input file.
+- `percolator/BASENAME.filtered.pout.xml` - Percolator PSM and peptide results for each respective input file.
+- `limelight/BASENAME.limelight.xml` - The Limelight XML representation of the results for each respective input file (if uploading to Limelight).
 
 ## Limelight Integration
 To upload results to Limelight, you must first set up your Limelight credentials. To find your api key, expand the "Upload Data" section on the project page and and click the "Command Line Import Info" button. Then enter the following on your command line (where the workflow is being run):
