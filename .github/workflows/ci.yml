@@ -1,0 +1,29 @@
+name: Nextflow Stub Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run stub tests
+        run: |
+          nextflow run main.nf -profile standard -stub --fasta test-data/test.fasta --spectra_dir test-data --magnum_conf example_files/Magnum.conf --limelight_upload=true --limelight_webapp_url=foo --limelight_project_id=0 --limelight_search_description=foo --limelight_search_short_name=bar --limelight_tags=stubs
