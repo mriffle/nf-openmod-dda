@@ -66,6 +66,13 @@ The ``params`` Section
      - ``magnum_conf``
      - That path to the location of the Magnum configuration file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/Magnum.conf`` or a Panorama WebDAV URL (described above). Default: ``'Magnum.conf'``.
    * - 
+     - ``process_separately``
+     - Set to ``true`` to run Percolator and Limelight upload separately for each input file. If ``false``, results are combined before running Percolator and uploading to Limelight. Default: ``false``.
+
+       .. note::
+
+          Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run.
+   * - 
      - ``limelight_upload``
      - Set to ``'true'`` to upload to Limelight. If set to ``true``, the following Limelight-related parameters apply. Default: ``false``.
    * - 
