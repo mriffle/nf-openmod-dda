@@ -9,7 +9,7 @@ process UPLOAD_TO_LIMELIGHT_SEP {
     container params.images.limelight_submit
 
     input:
-        tuple val(sample_id), path(limelight_xml), path(mzml_file)
+        tuple val(sample_id), path(mzml_file), path(limelight_xml)
         path fasta
         val webapp_url
         val project_id
