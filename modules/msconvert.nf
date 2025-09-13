@@ -8,16 +8,16 @@ process MSCONVERT {
         path raw_file
 
     output:
-        path("${raw_file.baseName}.mzML"), emit: mzml_file
+        tuple val(raw_file.baseName), path("${raw_file.baseName}.mzML"), emit: mzml
 
     script:
     """
-    wine msconvert \\
-        ${raw_file} \\
-        -v \\
-        --zlib \\
-        --mzML \\
-        --64 \\
+    wine msconvert \
+        ${raw_file} \
+        -v \
+        --zlib \
+        --mzML \
+        --64 \
         --filter "peakPicking true 1-"
     """
 

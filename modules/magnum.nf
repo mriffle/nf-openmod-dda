@@ -1,33 +1,33 @@
 process MAGNUM {
-    publishDir "${params.result_dir}/magnum", failOnError: true, mode: 'copy'
+    publishDir "${params.result_dir}/magnum/${sample_id}", failOnError: true, mode: 'copy'
     label 'process_high_constant'
     container params.images.magnum
 
     input:
-        tuple path(mzml_file), path(magnum_conf)
+        tuple val(sample_id), path(mzml_file), path(magnum_conf)
         path fasta_file
 
     output:
-        path("*.pep.xml"), emit: pepxml
-        path("*.perc.txt"), emit: pin
+        tuple val(sample_id), path("*.pep.xml"), emit: pepxml
+        tuple val(sample_id), path("*.perc.txt"), emit: pin
         path("*.stdout"), emit: stdout
         path("*.stderr"), emit: stderr
         path("*.diag.xml"), emit: diagxml, optional: true
 
     script:
     """
-    echo "Running magnum..."
-    magnum magnum_fixed.conf \
-        > >(tee "${mzml_file.baseName}.magnum.stdout") 2> >(tee "${mzml_file.baseName}.magnum.stderr" >&2)
+    echo "Running magnum for ${sample_id}..."
+    magnum ${magnum_conf} \
+        > >(tee "${sample_id}.magnum.stdout") 2> >(tee "${sample_id}.magnum.stderr" >&2)
 
-    echo "DONE!" # Needed for proper exit
+    echo "DONE!"
     """
 
     stub:
     """
-    touch "${mzml_file.baseName}.pep.xml"
-    touch "${mzml_file.baseName}.perc.txt"
-    touch "${mzml_file.baseName}.magnum.stdout"
-    touch "${mzml_file.baseName}.magnum.stderr"
+    touch "${sample_id}.pep.xml"
+    touch "${sample_id}.perc.txt"
+    touch "${sample_id}.magnum.stdout"
+    touch "${sample_id}.magnum.stderr"
     """
 }

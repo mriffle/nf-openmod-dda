@@ -1,31 +1,32 @@
 process PERCOLATOR {
-    publishDir "${params.result_dir}/percolator", failOnError: true, mode: 'copy'
+    publishDir "${params.result_dir}/percolator/${sample_id}", failOnError: true, mode: 'copy'
     label 'process_medium'
     label 'process_high_memory'
     container params.images.percolator
 
     input:
-        path pin_file
+        tuple val(sample_id), path(pin_file)
 
     output:
-        path("${pin_file.baseName}.pout.xml"), emit: pout
+        tuple val(sample_id), path("${sample_id}.pout.xml"), emit: pout
         path("*.stdout"), emit: stdout
         path("*.stderr"), emit: stderr
 
     script:
     """
-    echo "Running percolator..."
+    echo "Running percolator for ${sample_id}..."
     percolator \
-        -X "${pin_file.baseName}.pout.xml" \
+        -X "${sample_id}.pout.xml" \
         ${pin_file} \
-        > >(tee "percolator.stdout") 2> >(tee "percolator.stderr" >&2)
-    echo "Done!" # Needed for proper exit
+        > >(tee "${sample_id}.percolator.stdout") 2> >(tee "${sample_id}.percolator.stderr" >&2)
+    
+    echo "Done!"
     """
 
     stub:
     """
-    touch "${pin_file.baseName}.pout.xml"
-    touch "percolator.stdout"
-    touch "percolator.stderr"
+    touch "${sample_id}.pout.xml"
+    touch "${sample_id}.percolator.stdout"
+    touch "${sample_id}.percolator.stderr"
     """
 }
