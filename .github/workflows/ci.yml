@@ -24,8 +24,13 @@ jobs:
           curl -s https://get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - name: Run stub tests
+      - name: Set Nextflow secrets
         run: |
           nextflow secrets set PANORAMA_API_KEY "PLACEHOLDER"
           nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "PLACEHOLDER"
-          nextflow run main.nf -profile standard -stub -c conf/test.config
+
+      - name: Run combined stub tests
+        run: nextflow run main.nf -profile standard -stub -c conf/test_combined.config
+
+      - name: Run separate stub tests
+        run: nextflow run main.nf -profile standard -stub -c conf/test_separate.config
