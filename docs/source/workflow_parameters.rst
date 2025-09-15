@@ -63,6 +63,9 @@ The ``params`` Section
      - ``fasta``
      - That path to the location of the FASTA file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/my.fasta`` or a Panorama WebDAV URL (described above).
    * - 
+     - ``generate_decoys``
+     - If ``true``, the workflow will generate decoys using `yarp <https://github.com/mriffle/yarp>`_. If ``false``, decoys must already be present in the FASTA file and ``Magnum.conf`` must be told the decoy prefix. Default: ``true``.
+   * - 
      - ``magnum_conf``
      - That path to the location of the Magnum configuration file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/Magnum.conf`` or a Panorama WebDAV URL (described above). Default: ``'Magnum.conf'``.
    * - 
