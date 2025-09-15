@@ -7,6 +7,7 @@ include { PANORAMA_GET_FASTA } from "./modules/panorama"
 include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE_LIST } from "./modules/panorama"
+include { YARP } from "./modules/yarp"
 
 // Sub workflows
 include { wf_magnum_combined_percolator } from "./workflows/magnum_percolator_combined"
@@ -69,10 +70,17 @@ workflow {
         }
     }
 
-    if(params.process_separately) {
-        wf_magnum_separate_percolator(spectra_files_ch, magnum_conf, fasta, from_raw_files)
+    if(params.generate_decoys) {
+        YARP(fasta)
+        final_fasta = YARP.out.fasta_decoys
     } else {
-        wf_magnum_combined_percolator(spectra_files_ch, magnum_conf, fasta, from_raw_files)
+        final_fasta = fasta
+    }
+
+    if(params.process_separately) {
+        wf_magnum_separate_percolator(spectra_files_ch, magnum_conf, final_fasta, from_raw_files)
+    } else {
+        wf_magnum_combined_percolator(spectra_files_ch, magnum_conf, final_fasta, from_raw_files)
     }
 
 }
