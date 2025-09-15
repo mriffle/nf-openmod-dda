@@ -15,9 +15,9 @@ process YARP {
     """
     echo "Using YARP to add decoys to ${fasta_file}..."
     yarp \
-    --fasta-file ${fasta_file}
-    --decoy-method reverse
-    --decoy-prefix DECOY_
+    --fasta-file ${fasta_file} \
+    --decoy-method reverse \
+    --decoy-prefix DECOY_ \
     >${fasta_file.baseName}.plus-decoys.fasta 2>> >(tee yarp.stderr >&2)
     echo "Done!" # Needed for proper exit
     """
