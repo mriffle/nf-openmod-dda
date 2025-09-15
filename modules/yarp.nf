@@ -1,5 +1,5 @@
 process YARP {
-    publishDir "${params.result_dir}/yarp/${sample_id}", failOnError: true, mode: 'copy'
+    publishDir "${params.result_dir}/yarp", failOnError: true, mode: 'copy'
     label 'process_low'
     label 'error_retry'
     container params.images.yarp
