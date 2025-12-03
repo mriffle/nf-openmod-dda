@@ -19,6 +19,8 @@ include { wf_magnum_separate_percolator } from "./workflows/magnum_percolator_se
 //
 workflow {
 
+    magnum_conf_ch = Channel.fromPath(params.magnum_conf)
+
     if(params.fasta.startsWith("https://")) {
         PANORAMA_GET_FASTA(params.fasta)
         fasta = PANORAMA_GET_FASTA.out.panorama_file
@@ -76,7 +78,7 @@ workflow {
     }
 
     if(params.generate_decoys) {
-        YARP(fasta, params.magnum_conf, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
+        YARP(fasta, magnum_conf_ch, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
         final_fasta = YARP.out.fasta_decoys
     } else {
         final_fasta = fasta
