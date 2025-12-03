@@ -103,9 +103,9 @@ process VALIDATE_DECOY_OPTIONS {
     # BUT decoys already exist in the FASTA
     # => inconsistent: Magnum should NOT generate decoys on a DB that already has them
     # --------------------------------------------------------
-    if [ "$flag" = "1" ] && [ "$decoy_count" -gt 0 ]; then
+    if [ "\$flag" = "1" ] && [ "\$decoy_count" -gt 0 ]; then
         echo "ERROR: Magnum is configured to generate decoys (decoy_filter flag=1)," >&2
-        echo "       but the FASTA already contains $decoy_count decoy entries with prefix '$decoy_prefix'." >&2
+        echo "       but the FASTA already contains "\$decoy_count" decoy entries with prefix '\$decoy_prefix'." >&2
         echo "       This would cause decoys to be generated twice or corrupt the target/decoy structure." >&2
         echo "       Please either:" >&2
         echo "         - remove decoys from the FASTA, OR" >&2
