@@ -28,16 +28,16 @@ workflow {
         fasta = file(params.fasta, checkIfExists: true)
     }
 
-    // ensure no inconsistencies in decoy logic
-    // e.g. generating decoys when decoys are already present in FASTA
-    VALIDATE_DECOY_OPTIONS(fasta, params.magnum_conf, params.generate_decoys)
-
     if(params.magnum_conf.startsWith("https://")) {
         PANORAMA_GET_MAGNUM_CONF(params.magnum_conf)
         magnum_conf = PANORAMA_GET_MAGNUM_CONF.out.panorama_file
     } else {
         magnum_conf = file(params.magnum_conf, checkIfExists: true)
     }
+
+    // ensure no inconsistencies in decoy logic
+    // e.g. generating decoys when decoys are already present in FASTA
+    VALIDATE_DECOY_OPTIONS(fasta, magnum_conf, params.generate_decoys)
 
     if(params.spectra_dir.contains("https://")) {
 
@@ -78,7 +78,7 @@ workflow {
     }
 
     if(params.generate_decoys) {
-        YARP(fasta, magnum_conf_ch, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
+        YARP(fasta, magnum_conf, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
         final_fasta = YARP.out.fasta_decoys
     } else {
         final_fasta = fasta
