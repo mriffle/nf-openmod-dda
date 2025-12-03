@@ -6,7 +6,7 @@ process VALIDATE_DECOY_OPTIONS {
         val  generate_decoys
 
     output:
-        val(true) into decoy_ok_ch
+        val(true), emit: decoy_ok
 
     script:
     """
