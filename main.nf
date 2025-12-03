@@ -18,16 +18,16 @@ include { wf_magnum_separate_percolator } from "./workflows/magnum_percolator_se
 //
 workflow {
 
-    // ensure no inconsistencies in decoy logic
-    // e.g. generating decoys when decoys are already present in FASTA
-    VALIDATE_DECOY_OPTIONS(fasta_ch, magnum_conf_ch, params.generate_decoys)
-
     if(params.fasta.startsWith("https://")) {
         PANORAMA_GET_FASTA(params.fasta)
         fasta = PANORAMA_GET_FASTA.out.panorama_file
     } else {
         fasta = file(params.fasta, checkIfExists: true)
     }
+
+    // ensure no inconsistencies in decoy logic
+    // e.g. generating decoys when decoys are already present in FASTA
+    VALIDATE_DECOY_OPTIONS(fasta, params.magnum_conf, params.generate_decoys)
 
     if(params.magnum_conf.startsWith("https://")) {
         PANORAMA_GET_MAGNUM_CONF(params.magnum_conf)
@@ -75,7 +75,7 @@ workflow {
     }
 
     if(params.generate_decoys) {
-        YARP(fasta)
+        YARP(fasta, params.magnum_conf, decoy_ok_ch)
         final_fasta = YARP.out.fasta_decoys
     } else {
         final_fasta = fasta
