@@ -8,6 +8,7 @@ include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE_LIST } from "./modules/panorama"
 include { YARP } from "./modules/yarp"
+include { VALIDATE_DECOY_OPTIONS } from "./modules/validate_decoy_options"
 
 // Sub workflows
 include { wf_magnum_combined_percolator } from "./workflows/magnum_percolator_combined"
@@ -17,6 +18,8 @@ include { wf_magnum_separate_percolator } from "./workflows/magnum_percolator_se
 // The main workflow
 //
 workflow {
+
+    magnum_conf_ch = Channel.fromPath(params.magnum_conf)
 
     if(params.fasta.startsWith("https://")) {
         PANORAMA_GET_FASTA(params.fasta)
@@ -31,6 +34,10 @@ workflow {
     } else {
         magnum_conf = file(params.magnum_conf, checkIfExists: true)
     }
+
+    // ensure no inconsistencies in decoy logic
+    // e.g. generating decoys when decoys are already present in FASTA
+    VALIDATE_DECOY_OPTIONS(fasta, magnum_conf, params.generate_decoys)
 
     if(params.spectra_dir.contains("https://")) {
 
@@ -71,7 +78,7 @@ workflow {
     }
 
     if(params.generate_decoys) {
-        YARP(fasta)
+        YARP(fasta, magnum_conf, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
         final_fasta = YARP.out.fasta_decoys
     } else {
         final_fasta = fasta
