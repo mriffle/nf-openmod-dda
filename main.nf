@@ -76,7 +76,7 @@ workflow {
     }
 
     if(params.generate_decoys) {
-        YARP(fasta, params.magnum_conf, decoy_ok_ch)
+        YARP(fasta, params.magnum_conf, VALIDATE_DECOY_OPTIONS.out.decoy_ok)
         final_fasta = YARP.out.fasta_decoys
     } else {
         final_fasta = fasta
