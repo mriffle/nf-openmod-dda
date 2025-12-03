@@ -8,6 +8,7 @@ include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE_LIST } from "./modules/panorama"
 include { YARP } from "./modules/yarp"
+include { VALIDATE_DECOY_OPTIONS } from "./modules/validate_decoy_options"
 
 // Sub workflows
 include { wf_magnum_combined_percolator } from "./workflows/magnum_percolator_combined"
