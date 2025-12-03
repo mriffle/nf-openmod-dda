@@ -8,7 +8,8 @@ process VALIDATE_DECOY_OPTIONS {
     val  generate_decoys
 
     output:
-    val(true), emit decoy_ok
+    val(true), emit: decoy_ok
+
 
     script:
     """
