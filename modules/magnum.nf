@@ -1,6 +1,8 @@
 process MAGNUM {
     publishDir "${params.result_dir}/magnum/${sample_id}", failOnError: true, mode: 'copy'
     label 'process_high_constant'
+    label 'process_very_long'
+
     container params.images.magnum
 
     input:
