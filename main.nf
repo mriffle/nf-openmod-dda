@@ -5,6 +5,7 @@ nextflow.enable.dsl = 2
 // modules
 include { PANORAMA_GET_FASTA } from "./modules/panorama"
 include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
+include { PANORAMA_GET_MAGNUM_CONF } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE_LIST } from "./modules/panorama"
 include { YARP } from "./modules/yarp"
