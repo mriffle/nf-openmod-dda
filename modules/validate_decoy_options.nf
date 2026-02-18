@@ -115,4 +115,56 @@ process VALIDATE_DECOY_OPTIONS {
 
     echo "Input validation passed for \$fasta" >&2
     """
+
+    stub:
+    """
+    set -euo pipefail
+
+    fasta="${fasta}"
+    conf_file="${magnum_conf}"
+    generate_decoys_str="${generate_decoys}"
+
+    # Keep stub-mode behavior close to real validation logic:
+    # parse decoy_filter and validate key consistency constraints.
+    raw=\$(grep -E '^[[:space:]]*decoy_filter[[:space:]]*=' "\$conf_file" | head -n 1 || true)
+    if [ -z "\$raw" ]; then
+        echo "ERROR: No 'decoy_filter = ...' line found in Magnum config: \$conf_file" >&2
+        exit 1
+    fi
+
+    conf=\${raw%%#*}
+    rhs=\${conf#*=}
+    rhs=\$(echo "\$rhs" | awk '{\$1=\$1; print}')
+    decoy_prefix=\$(echo "\$rhs" | awk '{print \$1}')
+    flag=\$(echo "\$rhs" | awk '{print \$2}')
+
+    if [ -z "\$decoy_prefix" ] || [ -z "\$flag" ]; then
+        echo "ERROR: Could not parse decoy_filter line in \$conf_file: '\$raw'" >&2
+        exit 1
+    fi
+
+    decoy_count=\$(grep -c "^>\$decoy_prefix" "\$fasta" || true)
+
+    if [ "\$generate_decoys_str" = "false" ] && [ "\$flag" = "0" ] && [ "\$decoy_count" -eq 0 ]; then
+        echo "ERROR: generate_decoys=false and Magnum decoy_filter flag=0, but no decoys found in FASTA." >&2
+        exit 1
+    fi
+
+    if [ "\$generate_decoys_str" = "true" ] && [ "\$decoy_count" -gt 0 ]; then
+        echo "ERROR: generate_decoys=true but decoys already exist in FASTA." >&2
+        exit 1
+    fi
+
+    if [ "\$generate_decoys_str" = "true" ] && [ "\$flag" = "1" ]; then
+        echo "ERROR: Both pipeline and Magnum are configured to generate decoys." >&2
+        exit 1
+    fi
+
+    if [ "\$flag" = "1" ] && [ "\$decoy_count" -gt 0 ]; then
+        echo "ERROR: Magnum is configured to generate decoys, but FASTA already contains decoys." >&2
+        exit 1
+    fi
+
+    echo "Input validation passed for \$fasta (stub mode)" >&2
+    """
 }
