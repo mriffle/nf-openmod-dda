@@ -1,0 +1,255 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/nextflow_schema.json",
+    "title": "nf-openmod-dda parameters",
+    "description": "Schema for nf-openmod-dda workflow parameters.",
+    "type": "object",
+    "$defs": {
+        "input_output_options": {
+            "title": "Input and Output",
+            "type": "object",
+            "properties": {
+                "spectra_dir": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Directory containing mzML/RAW files, or PanoramaWeb URL(s)."
+                },
+                "fasta": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Path or PanoramaWeb URL to FASTA file."
+                },
+                "magnum_conf": {
+                    "type": "string",
+                    "minLength": 1,
+                    "default": "Magnum.conf",
+                    "description": "Path or PanoramaWeb URL to Magnum configuration file."
+                },
+                "result_dir": {
+                    "type": "string",
+                    "minLength": 1,
+                    "default": "results/nf-openmod-dda",
+                    "description": "Output directory for workflow results."
+                },
+                "report_dir": {
+                    "type": "string",
+                    "minLength": 1,
+                    "default": "reports/nf-openmod-dda",
+                    "description": "Output directory for execution reports."
+                }
+            },
+            "required": [
+                "spectra_dir",
+                "fasta"
+            ]
+        },
+        "workflow_options": {
+            "title": "Workflow Options",
+            "type": "object",
+            "properties": {
+                "generate_decoys": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Generate FASTA decoys with YARP."
+                },
+                "process_separately": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run Percolator and Limelight steps per sample instead of combined."
+                },
+                "percolator_pin_columns_to_remove": {
+                    "oneOf": [
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "default": [],
+                    "description": "PIN header names to remove before Percolator (list or comma-delimited string)."
+                }
+            }
+        },
+        "limelight_options": {
+            "title": "Limelight Upload",
+            "type": "object",
+            "properties": {
+                "limelight_upload": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable Limelight conversion and upload."
+                },
+                "limelight_webapp_url": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Limelight web application URL."
+                },
+                "limelight_project_id": {
+                    "type": [
+                        "integer",
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Limelight project ID."
+                },
+                "limelight_search_description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Search description displayed in Limelight."
+                },
+                "limelight_search_short_name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Short search label for Limelight combined uploads."
+                },
+                "limelight_tags": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Comma-delimited Limelight tags."
+                }
+            }
+        },
+        "resource_options": {
+            "title": "Resource and Cache Options",
+            "type": "object",
+            "properties": {
+                "max_memory": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?\\.(B|KB|MB|GB|TB|PB)$",
+                    "description": "Maximum memory available to workflow processes."
+                },
+                "max_cpus": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Maximum CPUs available to workflow processes."
+                },
+                "max_time": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?\\.(ms|s|m|h|d)$",
+                    "description": "Maximum runtime available to workflow processes."
+                },
+                "mzml_cache_directory": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Directory for cached RAW-to-mzML conversions."
+                },
+                "panorama_cache_directory": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Directory for cached Panorama downloads."
+                }
+            }
+        },
+        "notification_options": {
+            "title": "Notifications",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "email",
+                    "default": null,
+                    "description": "Email address for completion notification."
+                }
+            }
+        },
+        "internal_options": {
+            "title": "Internal Options",
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "object",
+                    "description": "Container image mapping loaded from container_images.config.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/workflow_options"
+        },
+        {
+            "$ref": "#/$defs/limelight_options"
+        },
+        {
+            "$ref": "#/$defs/resource_options"
+        },
+        {
+            "$ref": "#/$defs/notification_options"
+        },
+        {
+            "$ref": "#/$defs/internal_options"
+        },
+        {
+            "if": {
+                "properties": {
+                    "limelight_upload": {
+                        "const": true
+                    }
+                },
+                "required": [
+                    "limelight_upload"
+                ]
+            },
+            "then": {
+                "required": [
+                    "limelight_webapp_url",
+                    "limelight_project_id",
+                    "limelight_search_description",
+                    "limelight_search_short_name"
+                ],
+                "properties": {
+                    "limelight_webapp_url": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "limelight_project_id": {
+                        "oneOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        ]
+                    },
+                    "limelight_search_description": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "limelight_search_short_name": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            }
+        }
+    ]
+}

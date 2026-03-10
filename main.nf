@@ -2,6 +2,8 @@
 
 nextflow.enable.dsl = 2
 
+include { validateParameters } from 'plugin/nf-schema'
+
 // modules
 include { PANORAMA_GET_FASTA } from "./modules/panorama"
 include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
@@ -41,6 +43,7 @@ def normalize_pin_columns_to_remove(pin_columns_param) {
 // The main workflow
 //
 workflow {
+    validateParameters()
 
     magnum_conf_ch = Channel.fromPath(params.magnum_conf)
 

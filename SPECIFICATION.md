@@ -49,11 +49,22 @@ When reasoning about this repository, use these files in order of importance:
 2. `workflows/*.nf`
 3. `modules/*.nf`
 4. `nextflow.config`
-5. `conf/base.config`
-6. `container_images.config`
-7. `README.md` and `docs/source/*`
+5. `nextflow_schema.json`
+6. `conf/base.config`
+7. `container_images.config`
+8. `README.md` and `docs/source/*`
 
 Generated runtime artifacts under `work/`, `reports/`, and `docs/build/` are not implementation source of truth.
+
+## Parameter Schema Contract
+
+Workflow parameters are validated with `nf-schema` using `nextflow_schema.json`.
+
+Maintenance rule:
+
+- Any change to workflow parameters (add/remove/rename/type/default/required behavior) must be reflected in `nextflow_schema.json` in the same change.
+- Parameter changes should also stay consistent across `nextflow.config`, docs, and test configs.
+- CI/stub tests should be run after schema-affecting changes to confirm validation still passes.
 
 ## High-Level Architecture
 
@@ -535,5 +546,6 @@ When a new step, mode, integration, or execution rule is added, update this docu
 - image-selection model
 - testing or CI behavior
 - source-of-truth file layout
+- workflow parameter schema (`nextflow_schema.json`)
 
 This document should remain concise, architectural, and stable. It should describe how the repository works without reproducing low-level code that can be inspected directly.
