@@ -2,6 +2,7 @@
 include { MSCONVERT } from "../modules/msconvert"
 include { MAGNUM } from "../modules/magnum"
 include { PERCOLATOR } from "../modules/percolator"
+include { FILTER_PIN_COLUMNS } from "../modules/filter_pin_columns"
 include { ADD_PARAMS_TO_MAGNUM_CONF } from "../modules/add_params_to_magnum_conf"
 include { CONVERT_TO_LIMELIGHT_XML_SEP as LIMELIGHT_XML_CONVERT_SEP } from "../modules/limelight_xml_convert_sep"
 include { UPLOAD_TO_LIMELIGHT_SEP as LIMELIGHT_UPLOAD_SEP } from "../modules/limelight_upload_sep"
@@ -13,6 +14,7 @@ workflow wf_magnum_separate_percolator {
         magnum_conf
         fasta
         from_raw_files
+        pin_columns_to_remove
 
     main:
 
@@ -35,7 +37,13 @@ workflow wf_magnum_separate_percolator {
 
         MAGNUM(ADD_PARAMS_TO_MAGNUM_CONF.out.magnum_job_tuple, fasta)
 
-        PERCOLATOR(MAGNUM.out.pin)
+        pin_for_percolator_ch = MAGNUM.out.pin
+        if(pin_columns_to_remove.size() > 0) {
+            FILTER_PIN_COLUMNS(pin_for_percolator_ch, pin_columns_to_remove)
+            pin_for_percolator_ch = FILTER_PIN_COLUMNS.out.pin
+        }
+
+        PERCOLATOR(pin_for_percolator_ch)
 
         if (params.limelight_upload) {
 

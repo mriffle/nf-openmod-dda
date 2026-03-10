@@ -21,6 +21,7 @@ This workflow accepts the following parameters:
 - `fasta` - `required` Path to the FASTA file
 - `spectra_dir` - `required` Path to a directory containing either raw or mzML files. If mzML files are found, raw files will be ignored. 
 - `process_separately` - `(optional)` Set to `true` to run Percolator and Limelight upload separately for each input file. If `false` (the default), results from all input files are combined before running Percolator and uploading to Limelight. Note: Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run. Default: `false`.
+- `percolator_pin_columns_to_remove` - `(optional)` List of PIN header names to remove before running Percolator (e.g., `['delta_score', 'mod_mass']` or `'delta_score,mod_mass'`). Leave empty to skip filtering. Default: `[]`.
 - `email` - To whom a completion email should be sent. Exclude this parameter to send no email. Default is to send no email.
 - `limelight_upload` - Leave out or set to false to not upload to Limelight. Set to true to upload to Limelight.
 
@@ -105,4 +106,3 @@ To upload results to Limelight, you must first set up your Limelight credentials
     }
     ```
     Note: it is not required that all files be in PanoramaWeb, mixing local and PanoramaWeb files will work.
-

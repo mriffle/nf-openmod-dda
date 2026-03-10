@@ -75,6 +75,9 @@ The ``params`` Section
        .. note::
 
           Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run.
+   * -
+     - ``percolator_pin_columns_to_remove``
+     - Optional list of PIN header names to remove before Percolator runs. Provide as a list (e.g., ``['delta_score', 'mod_mass']``) or as a comma-delimited string. Leave empty to disable filtering. Default: ``[]``.
    * - 
      - ``limelight_upload``
      - Set to ``'true'`` to upload to Limelight. If set to ``true``, the following Limelight-related parameters apply. Default: ``false``.

@@ -15,6 +15,28 @@ include { VALIDATE_DECOY_OPTIONS } from "./modules/validate_decoy_options"
 include { wf_magnum_combined_percolator } from "./workflows/magnum_percolator_combined"
 include { wf_magnum_separate_percolator } from "./workflows/magnum_percolator_separate"
 
+def normalize_pin_columns_to_remove(pin_columns_param) {
+    if (pin_columns_param == null) {
+        return []
+    }
+
+    if (pin_columns_param instanceof CharSequence) {
+        return pin_columns_param
+            .toString()
+            .split(',')
+            .collect { it.trim() }
+            .findAll { it }
+    }
+
+    if (pin_columns_param instanceof Collection) {
+        return pin_columns_param
+            .collect { it.toString().trim() }
+            .findAll { it }
+    }
+
+    error "Invalid value for --percolator_pin_columns_to_remove. Use a comma-delimited string or list of column names."
+}
+
 //
 // The main workflow
 //
@@ -85,10 +107,24 @@ workflow {
         final_fasta = fasta
     }
 
+    percolator_pin_columns_to_remove = normalize_pin_columns_to_remove(params.percolator_pin_columns_to_remove)
+
     if(params.process_separately) {
-        wf_magnum_separate_percolator(spectra_files_ch, magnum_conf, final_fasta, from_raw_files)
+        wf_magnum_separate_percolator(
+            spectra_files_ch,
+            magnum_conf,
+            final_fasta,
+            from_raw_files,
+            percolator_pin_columns_to_remove
+        )
     } else {
-        wf_magnum_combined_percolator(spectra_files_ch, magnum_conf, final_fasta, from_raw_files)
+        wf_magnum_combined_percolator(
+            spectra_files_ch,
+            magnum_conf,
+            final_fasta,
+            from_raw_files,
+            percolator_pin_columns_to_remove
+        )
     }
 
 }

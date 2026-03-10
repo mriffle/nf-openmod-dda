@@ -3,6 +3,7 @@ include { MSCONVERT } from "../modules/msconvert"
 include { MAGNUM } from "../modules/magnum"
 include { PERCOLATOR } from "../modules/percolator"
 include { COMBINE_PIN_FILES } from "../modules/combine_pin_files"
+include { FILTER_PIN_COLUMNS } from "../modules/filter_pin_columns"
 include { ADD_PARAMS_TO_MAGNUM_CONF } from "../modules/add_params_to_magnum_conf"
 include { CONVERT_TO_LIMELIGHT_XML as LIMELIGHT_XML_CONVERT } from "../modules/limelight_xml_convert"
 include { UPLOAD_TO_LIMELIGHT as LIMELIGHT_UPLOAD } from "../modules/limelight_upload"
@@ -14,6 +15,7 @@ workflow wf_magnum_combined_percolator {
         magnum_conf
         fasta
         from_raw_files
+        pin_columns_to_remove
 
     main:
 
@@ -35,8 +37,14 @@ workflow wf_magnum_combined_percolator {
 
         COMBINE_PIN_FILES(pin_files)
 
-        combined_pin_tuple = COMBINE_PIN_FILES.out.combined_pin.map { pin_file -> tuple("combined", pin_file) }
-        PERCOLATOR(combined_pin_tuple)
+        pin_for_percolator_ch = COMBINE_PIN_FILES.out.combined_pin.map { pin_file -> tuple("combined", pin_file) }
+
+        if(pin_columns_to_remove.size() > 0) {
+            FILTER_PIN_COLUMNS(pin_for_percolator_ch, pin_columns_to_remove)
+            pin_for_percolator_ch = FILTER_PIN_COLUMNS.out.pin
+        }
+
+        PERCOLATOR(pin_for_percolator_ch)
 
         if (params.limelight_upload) {
 

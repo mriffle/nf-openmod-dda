@@ -116,10 +116,11 @@ The implemented workflow can be understood as the following conceptual path:
 5. If spectra are RAW, convert them to mzML
 6. Create sample-specific Magnum configuration files
 7. Run Magnum per sample
-8. Run Percolator either once on combined data or once per sample
-9. If enabled, convert outputs to Limelight XML
-10. If enabled, upload results to Limelight
-11. Optionally send completion email
+8. Optionally filter Percolator PIN columns before Percolator
+9. Run Percolator either once on combined data or once per sample
+10. If enabled, convert outputs to Limelight XML
+11. If enabled, upload results to Limelight
+12. Optionally send completion email
 
 ## Workflow Steps and Program Roles
 
@@ -186,6 +187,15 @@ Helper step used only in combined mode.
 Role:
 
 - merge multiple Percolator input files into a single combined input file
+
+### FILTER_PIN_COLUMNS
+
+Optional helper step used immediately before Percolator in both combined and separate mode.
+
+Role:
+
+- remove user-specified header columns from Percolator PIN input files
+- preserve tab-delimited layout for the remaining columns
 
 ### Percolator
 
