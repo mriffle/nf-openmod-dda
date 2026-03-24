@@ -220,9 +220,7 @@
             "then": {
                 "required": [
                     "limelight_webapp_url",
-                    "limelight_project_id",
-                    "limelight_search_description",
-                    "limelight_search_short_name"
+                    "limelight_project_id"
                 ],
                 "properties": {
                     "limelight_webapp_url": {
@@ -241,12 +239,26 @@
                         ]
                     },
                     "limelight_search_description": {
-                        "type": "string",
-                        "minLength": 1
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "limelight_search_short_name": {
-                        "type": "string",
-                        "minLength": 1
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 }
             }

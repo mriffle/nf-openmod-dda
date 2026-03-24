@@ -27,7 +27,7 @@ process UPLOAD_TO_LIMELIGHT_SEP {
         tags_param = "--search-tag=\"${tags.split(',').join('\" --search-tag=\"')}\""
     }
 
-    search_description_param = search_long_name == null ? '' : "--search-description=\"(${sample_id}) ${search_long_name}\""
+    search_description_param = search_long_name ? "--search-description=\"${search_long_name} (${sample_id})\"" : "--no-search-description"
 
     """
     echo "Submitting search results for Limelight import for ${sample_id}..."
@@ -38,7 +38,7 @@ process UPLOAD_TO_LIMELIGHT_SEP {
         --project-id=${project_id} \
         --limelight-xml-file=${limelight_xml} \
         --fasta-file=${fasta} \
-        --search-description="${search_long_name} (${sample_id})" \
+        ${search_description_param} \
         --path="${workflow.launchDir}" \
         --scan-file=${mzml_file} \
         ${tags_param} \

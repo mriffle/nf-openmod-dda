@@ -31,8 +31,8 @@ process UPLOAD_TO_LIMELIGHT {
 
     scans_param = "--scan-file=${(mzml_files as List).join(' --scan-file=')}"
 
-    search_description_param = search_long_name == null ? '' : "--search-description=\"${search_long_name}\""
-    search_short_label_param = search_short_name == null ? '' : "--search-short-label=\"${search_short_name}\""
+    search_description_param = search_long_name ? "--search-description=\"${search_long_name}\"" : "--no-search-description"
+    search_short_label_param = search_short_name ? "--search-short-label=\"${search_short_name}\"" : ''
 
     """
     echo "Submitting search results for Limelight import..."

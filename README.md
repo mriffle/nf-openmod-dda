@@ -28,9 +28,11 @@ This workflow accepts the following parameters:
 If uploading to Limelight, the following parameters are required:
 - `limelight_webapp_url` - The URL of the Limelight web application you are uploading to. Can be obtained by expanding the "Upload Data" section on the project page and and clicking the "Command Line Import Info" button. 
 - `limelight_project_id` - The numeric ID of the Limelight project to upload the data to. Can be obtained by expanding the "Upload Data" section on the project page and and clicking the "Command Line Import Info" button. 
-- `limelight_search_description` - The one-line description of this search to send to Limelight.
-- `limelight_search_short_name` - A very brief label used to refer to this search in charts and tables.
-- `limelight_tags` - `(optional)` A comma-delimited list of tags to send to Limelight for this search.
+
+If uploading to Limelight, the following parameters are optional:
+- `limelight_search_description` - The one-line description of this search to send to Limelight. If omitted, the upload command will send `--no-search-description`.
+- `limelight_search_short_name` - A very brief label used to refer to this search in charts and tables. If omitted, the short-label argument will not be sent.
+- `limelight_tags` - A comma-delimited list of tags to send to Limelight for this search. If omitted, no tag arguments will be sent.
 
 The following parameters control where data are cached to save time with subsequent processing:
 - `mzml_cache_directory` - The cache directory to use when converting raw files to mzML. Default: `/data/mass_spec/nextflow/nf-openmod-dda/mzml_cache`

@@ -61,9 +61,9 @@ workflow wf_magnum_combined_percolator {
                 fasta,
                 params.limelight_webapp_url,
                 params.limelight_project_id,
-                params.limelight_search_description,
-                params.limelight_search_short_name,
-                params.limelight_tags
+                params.limelight_search_description ?: '',
+                params.limelight_search_short_name ?: '',
+                params.limelight_tags ?: ''
             )
         }
 

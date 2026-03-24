@@ -89,13 +89,13 @@ The ``params`` Section
      - This is required if ``limelight_upload`` is set to ``true``. This is the URL of the Limelight instance to which to upload data. E.g., ``'https://limelight.yeastrc.org/limelight'``.
    * - 
      - ``limelight_search_description``
-     - This is required if ``limelight_upload`` is set to ``true``. This is a one-line description of the search that will appear in Limelight. If ``process_separately`` is set to ``true``, the base name of the raw/mzML file will be appended to this description. 
+     - Optional if ``limelight_upload`` is set to ``true``. This is a one-line description of the search that will appear in Limelight. If ``process_separately`` is set to ``true``, the base name of the raw/mzML file will be appended to this description. If not provided, the workflow will upload with ``--no-search-description``.
    * - 
      - ``limelight_search_short_name``
-     - This is required if ``limelight_upload`` is set to ``true``. This is a very brief one-word nickname for this search. Used in plots to label data. This is ignored if ``process_separately`` is set to ``true``.
+     - Optional if ``limelight_upload`` is set to ``true``. This is a very brief one-word nickname for this search. Used in plots to label data. This is ignored if ``process_separately`` is set to ``true``. If not provided, no short-label argument is sent.
    * - 
      - ``limelight_tags``
-     - Comma-delimited list of Limelight tags to use for this search (e.g., ``'yeast,control,2023'``. Any tags present that haven't been created in Limelight will be created in Limelight. Note: You can also specify
+     - Optional comma-delimited list of Limelight tags to use for this search (e.g., ``'yeast,control,2023'``. Any tags present that haven't been created in Limelight will be created in Limelight. Note: You can also specify
        categories for tags, and tags with the same tag categories will be grouped together in Limelight. For example, one could have a tag category called ``treatment`` and tags called ``control`` or ``irradiated`` as
        tags within this tag category. To specify a tag category use the tag category name then a tilda (~) then the tag name. E.g., ``treatment~control,organism~yeast,year~2023``. Default: no tags will be sent.
    * - 
