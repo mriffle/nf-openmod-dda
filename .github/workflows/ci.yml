@@ -1,4 +1,4 @@
-name: Nextflow Stub Test
+name: CI Tests
 
 on:
   push:
@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  test:
+  stub-tests:
+    name: Stub Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +35,43 @@ jobs:
 
       - name: Run separate stub tests
         run: nextflow run main.nf -profile standard -stub -c conf/test_separate.config
+
+  smoke-tests:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: single-decoys
+            config: conf/smoke_single_decoys.config
+          - name: single-generate-decoys
+            config: conf/smoke_single_generate_decoys.config
+          - name: multi-decoys
+            config: conf/smoke_multi_decoys.config
+          - name: multi-generate-decoys
+            config: conf/smoke_multi_generate_decoys.config
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Set Nextflow secrets
+        run: |
+          nextflow secrets set PANORAMA_API_KEY "PLACEHOLDER"
+          nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "PLACEHOLDER"
+
+      - name: Run smoke test (${{ matrix.name }})
+        run: nextflow run main.nf -profile standard -c ${{ matrix.config }}

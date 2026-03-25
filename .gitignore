@@ -11,3 +11,6 @@
 work/
 results/
 reports/
+
+venv/
+.claude/

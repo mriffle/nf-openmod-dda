@@ -52,7 +52,8 @@ When reasoning about this repository, use these files in order of importance:
 5. `nextflow_schema.json`
 6. `conf/base.config`
 7. `container_images.config`
-8. `README.md` and `docs/source/*`
+8. `conf/smoke_*.config` and `conf/test_*.config`
+9. `README.md` and `docs/source/*`
 
 Generated runtime artifacts under `work/`, `reports/`, and `docs/build/` are not implementation source of truth.
 
@@ -473,24 +474,74 @@ The repository contains dedicated test configs for at least:
 
 These are intended to exercise the two major downstream execution shapes.
 
+### Smoke tests
+
+Smoke tests run the full workflow with real (small) data to verify end-to-end execution without stubs. They use small FASTA files and trimmed mzML files committed to the `test-data/` directory.
+
+The smoke test matrix covers combinations of two dimensions:
+
+- **File count**: single mzML (`test-data/single/`) vs all three mzMLs (`test-data/`)
+- **Decoy strategy**: pre-existing decoys (`test-decoys.fasta`, `generate_decoys=false`) vs YARP-generated decoys (`test.fasta`, `generate_decoys=true`)
+
+Both decoy strategies use a Magnum config with `decoy_filter = DECOY_ 0` (`test-data/Magnum-no-generate-decoys.conf`). Combined and separate processing modes are distributed across the test matrix so both modes are exercised.
+
+The four smoke test configs are:
+
+| Config | Files | Decoys | Mode |
+|--------|-------|--------|------|
+| `conf/smoke_single_decoys.config` | single | pre-existing | combined |
+| `conf/smoke_single_generate_decoys.config` | single | YARP-generated | separate |
+| `conf/smoke_multi_decoys.config` | 3 mzMLs | pre-existing | separate |
+| `conf/smoke_multi_generate_decoys.config` | 3 mzMLs | YARP-generated | combined |
+
+Limelight upload is disabled in all smoke tests because no Limelight instance is available in CI.
+
+### Test data
+
+The `test-data/` directory contains:
+
+- `test.fasta` — small FASTA with 3 target proteins (no decoys)
+- `test-decoys.fasta` — same 3 targets plus 3 `DECOY_` reversed sequences
+- `test1.mzML`, `test2.mzML`, `test3.mzML` — trimmed mzML files for testing
+- `single/test1.mzML` — symlink to `test1.mzML` for single-file test scenarios
+- `Magnum.conf` — Magnum config with `decoy_filter = DECOY_ 1` (Magnum generates decoys)
+- `Magnum-no-generate-decoys.conf` — Magnum config with `decoy_filter = DECOY_ 0` (decoys already present or YARP-generated)
+
 ## Continuous Integration
 
 CI is implemented through GitHub Actions.
 
-The current CI model is high level:
+### Stub test job
+
+The stub test job verifies workflow wiring and control flow:
 
 - install Java and Nextflow
 - seed placeholder secrets needed by the workflow startup path
 - run the workflow in stub mode using the combined test config
 - run the workflow in stub mode using the separate test config
 
-This means CI primarily verifies:
+This verifies:
 
 - the workflow parses and launches
 - module inclusion works
 - major branches still connect correctly
 
-CI does not currently serve as a full integration or scientific-validation environment.
+### Smoke test job
+
+The smoke test job runs the workflow end-to-end with real data using a matrix strategy:
+
+- install Java and Nextflow
+- seed placeholder secrets
+- run each of the four smoke test configs against real test data with Docker containers
+
+The four matrix entries run in parallel with `fail-fast: false` so all configs are tested independently.
+
+This verifies:
+
+- the workflow produces correct outputs with real tools
+- Magnum, Percolator, and YARP execute successfully on real data
+- both combined and separate processing modes work end-to-end
+- both decoy strategies (pre-existing and YARP-generated) work correctly
 
 ## Documentation Layout
 
