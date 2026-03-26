@@ -52,6 +52,8 @@ jobs:
             config: conf/smoke_multi_decoys.config
           - name: multi-generate-decoys
             config: conf/smoke_multi_generate_decoys.config
+          - name: single-filter-pin-columns
+            config: conf/smoke_single_filter_pin_columns.config
 
     steps:
       - name: Check out repository code

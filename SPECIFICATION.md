@@ -485,14 +485,15 @@ The smoke test matrix covers combinations of two dimensions:
 
 Both decoy strategies use a Magnum config with `decoy_filter = DECOY_ 0` (`test-data/Magnum-no-generate-decoys.conf`). Combined and separate processing modes are distributed across the test matrix so both modes are exercised.
 
-The four smoke test configs are:
+The smoke test configs are:
 
-| Config | Files | Decoys | Mode |
-|--------|-------|--------|------|
-| `conf/smoke_single_decoys.config` | single | pre-existing | combined |
-| `conf/smoke_single_generate_decoys.config` | single | YARP-generated | separate |
-| `conf/smoke_multi_decoys.config` | 3 mzMLs | pre-existing | separate |
-| `conf/smoke_multi_generate_decoys.config` | 3 mzMLs | YARP-generated | combined |
+| Config | Files | Decoys | Mode | PIN filtering |
+|--------|-------|--------|------|---------------|
+| `conf/smoke_single_decoys.config` | single | pre-existing | combined | no |
+| `conf/smoke_single_generate_decoys.config` | single | YARP-generated | separate | no |
+| `conf/smoke_multi_decoys.config` | 3 mzMLs | pre-existing | separate | no |
+| `conf/smoke_multi_generate_decoys.config` | 3 mzMLs | YARP-generated | combined | no |
+| `conf/smoke_single_filter_pin_columns.config` | single | YARP-generated | combined | `PPM` column removed |
 
 Limelight upload is disabled in all smoke tests because no Limelight instance is available in CI.
 
@@ -532,9 +533,9 @@ The smoke test job runs the workflow end-to-end with real data using a matrix st
 
 - install Java and Nextflow
 - seed placeholder secrets
-- run each of the four smoke test configs against real test data with Docker containers
+- run each of the smoke test configs against real test data with Docker containers
 
-The four matrix entries run in parallel with `fail-fast: false` so all configs are tested independently.
+The matrix entries run in parallel with `fail-fast: false` so all configs are tested independently.
 
 This verifies:
 
