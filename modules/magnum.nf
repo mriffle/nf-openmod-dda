@@ -19,7 +19,9 @@ process MAGNUM {
     script:
     """
     echo "Running magnum for ${sample_id}..."
-    magnum ${magnum_conf} \
+    cp ${magnum_conf} ${sample_id}.run.conf
+    sed -i "s|threads\\s*=.*|threads = ${task.cpus}|" ${sample_id}.run.conf
+    magnum ${sample_id}.run.conf \
         > >(tee "${sample_id}.magnum.stdout") 2> >(tee "${sample_id}.magnum.stderr" >&2)
 
     echo "DONE!"
