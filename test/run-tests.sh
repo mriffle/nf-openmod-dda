@@ -128,6 +128,31 @@ test_workflow_stub_raw() {
     fi
 }
 
+test_add_params() {
+    # Real ADD_PARAMS_TO_MAGNUM_CONF: confirms both declared outputs are produced —
+    # the per-sample .conf with substituted paths, and the .stderr file (which a
+    # `>(tee ...)` process substitution could fail to create for these instant seds).
+    local ld="$WORK_DIR/$V/add_params"
+    rm -rf "$ld"; mkdir -p "$ld"
+    if ( cd "$ld" && NXF_VER="$V" "$LAUNCHER" -log "$ld/nf.log" run "$REPO_ROOT/test/drivers/add_params_driver.nf" \
+            -c "$REPO_ROOT/container_images.config" -c "$HARNESS_CONFIG" \
+            -work-dir "$ld/work" --result_dir "$ld/results" \
+            --test_mzml "$REPO_ROOT/test-data/test1.mzML" \
+            --test_conf "$REPO_ROOT/test-data/Magnum-no-generate-decoys.conf" \
+            --test_fasta "$REPO_ROOT/test-data/test.fasta" \
+            ) > "$ld/out.txt" 2>&1; then
+        local d="$ld/results/magnum/sample"
+        if [ ! -f "$d/sample.add-params.stderr" ]; then
+            fail "add_params: .stderr output not produced" "$ld/out.txt"; return; fi
+        if ! grep -q '^database = test.fasta' "$d/sample.conf" 2>/dev/null \
+           || ! grep -q '^MS_data_file = test1.mzML' "$d/sample.conf" 2>/dev/null; then
+            fail "add_params: conf substitutions missing" "$d/sample.conf"; return; fi
+        ok "add_params: produces .conf (substituted) and .stderr"
+    else
+        fail "add_params: run failed" "$ld/out.txt"
+    fi
+}
+
 test_filter_preserves_proteins() {
     local ld="$WORK_DIR/$V/filter_happy"
     rm -rf "$ld"; mkdir -p "$ld"
@@ -202,6 +227,9 @@ for V in "${VERSIONS[@]}"; do
         magnum/test2/test2.pep.xml percolator/test1/test1.pout.xml \
         percolator/test3/test3.pout.xml limelight/test2/test2.limelight.xml
     test_workflow_stub_raw
+
+    # ADD_PARAMS_TO_MAGNUM_CONF real script + declared outputs (real sed, no Docker).
+    test_add_params
 
     # FILTER_PIN_COLUMNS correctness + failure points (real awk, no Docker).
     test_filter_preserves_proteins

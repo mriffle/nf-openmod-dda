@@ -116,10 +116,10 @@ workflow {
         spectra_dir = file(params.spectra_dir, checkIfExists: true)
 
         // get our mzML files
-        mzml_files = file("$spectra_dir/*.mzML")
+        mzml_files = files("$spectra_dir/*.mzML")
 
         // get our raw files
-        raw_files = file("$spectra_dir/*.raw")
+        raw_files = files("$spectra_dir/*.raw")
 
         if(mzml_files.size() < 1 && raw_files.size() < 1) {
             error "No raw or mzML files found in: $spectra_dir"

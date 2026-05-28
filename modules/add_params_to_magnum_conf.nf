@@ -19,8 +19,12 @@ process ADD_PARAMS_TO_MAGNUM_CONF {
     """
     echo "Adding FASTA and mzML to magnum conf..."
 
-    sed -e "s|database = .*|database = ${fasta}|" ${magnum_conf} > magnum_tmp.conf 2> >(tee ${sample_id}.add-params.stderr >&2)
-    sed -e "s|MS_data_file = .*|MS_data_file = ${mzml_file}|" magnum_tmp.conf > ${sample_id}.conf 2>> >(tee ${sample_id}.add-params.stderr >&2)
+    # Redirect stderr straight to the file (created synchronously by the shell)
+    # rather than via a `>(tee ...)` process substitution: these seds are
+    # instantaneous and emit no stderr, and the async tee could otherwise fail to
+    # create the declared `*.stderr` output before Nextflow collects it.
+    sed -e "s|database = .*|database = ${fasta}|" ${magnum_conf} > magnum_tmp.conf 2> ${sample_id}.add-params.stderr
+    sed -e "s|MS_data_file = .*|MS_data_file = ${mzml_file}|" magnum_tmp.conf > ${sample_id}.conf 2>> ${sample_id}.add-params.stderr
 
     echo "DONE!"
     """
