@@ -1,4 +1,6 @@
 process VALIDATE_DECOY_OPTIONS {
+    label 'process_low_constant'
+    container params.images.ubuntu
 
     input:
         path fasta

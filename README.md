@@ -1,110 +1,105 @@
 # nf-openmod-dda
-A Nextflow workflow for performing an open modification search and
-optional subsequent upload to Limelight (https://limelight-ms.org/)
-for visualization, sharing, and analysis.
 
-## Documentation
-Full documentation can be found at https://nf-openmod-dda.readthedocs.io/.
+A [Nextflow](https://www.nextflow.io/) workflow for **open-modification DDA proteomics**.
+It runs a [Magnum](https://magnum-ms.org/) open-modification search, scores the results
+with [Percolator](http://percolator.ms/), and optionally publishes them to
+[Limelight](https://limelight-ms.org/) for visualization, sharing, and analysis.
 
-The workflow currently runs:
+📖 **Full documentation: <https://nf-openmod-dda.readthedocs.io/>**
 
-- msconvert (if raw files are used as input) (https://proteowizard.sourceforge.io/index.html)
-- magnum (https://magnum-ms.org/)
-- percolator (http://percolator.ms/)
-- Limelight XML conversion (https://github.com/yeastrc/limelight-import-magnum-percolator)
-- Limelight uploader
+## What it is
 
-## Parameters
-This workflow accepts the following parameters:
+Open-modification searching, format conversion, decoy handling, and result publishing
+normally involve several tools run by hand, which is error-prone and hard to reproduce.
+This workflow wraps that whole path so it runs the same way every time. Given a FASTA
+database, a Magnum configuration file, and a directory of spectra (mzML or vendor RAW),
+it will:
 
-- `magnum_conf` - `required` Path to the Magnum conf file to use for the search. See https://raw.githubusercontent.com/mriffle/nf-openmod-dda/main/example_files/Magnum.conf for example `Magnum.conf`.
-- `fasta` - `required` Path to the FASTA file
-- `spectra_dir` - `required` Path to a directory containing either raw or mzML files. If mzML files are found, raw files will be ignored. 
-- `process_separately` - `(optional)` Set to `true` to run Percolator and Limelight upload separately for each input file. If `false` (the default), results from all input files are combined before running Percolator and uploading to Limelight. Note: Combining output for Percolator may result in better statistics, but it makes it harder to compare the results from individual raw files to other searches that were not a part of that Percolator run. Default: `false`.
-- `percolator_pin_columns_to_remove` - `(optional)` List of PIN header names to remove before running Percolator (e.g., `['delta_score', 'mod_mass']` or `'delta_score,mod_mass'`). Leave empty to skip filtering. Default: `[]`.
-- `email` - To whom a completion email should be sent. Exclude this parameter to send no email. Default is to send no email.
-- `limelight_upload` - Leave out or set to false to not upload to Limelight. Set to true to upload to Limelight.
+1. Acquire inputs — locally or from [PanoramaWeb](https://panoramaweb.org/) (any path beginning with `https://`).
+2. Validate decoy settings, and optionally generate decoys with [YARP](https://github.com/mriffle/yarp).
+3. Convert vendor RAW files to mzML with [msconvert](https://proteowizard.sourceforge.io/) (only when needed).
+4. Run **Magnum** on each spectra file.
+5. Score with **Percolator** — either once over the combined results, or once per file.
+6. Optionally convert to **Limelight XML** and upload it to a Limelight server.
 
-If uploading to Limelight, the following parameters are required:
-- `limelight_webapp_url` - The URL of the Limelight web application you are uploading to. Can be obtained by expanding the "Upload Data" section on the project page and and clicking the "Command Line Import Info" button. 
-- `limelight_project_id` - The numeric ID of the Limelight project to upload the data to. Can be obtained by expanding the "Upload Data" section on the project page and and clicking the "Command Line Import Info" button. 
+Every step runs in a container, so the only host requirements are Nextflow and Docker.
+The same workflow runs locally, on Slurm, or on AWS Batch by selecting an execution profile.
 
-If uploading to Limelight, the following parameters are optional:
-- `limelight_search_description` - The one-line description of this search to send to Limelight. If omitted, the upload command will send `--no-search-description`.
-- `limelight_search_short_name` - A very brief label used to refer to this search in charts and tables. If omitted, the short-label argument will not be sent.
-- `limelight_tags` - A comma-delimited list of tags to send to Limelight for this search. If omitted, no tag arguments will be sent.
+## Running it
 
-The following parameters control where data are cached to save time with subsequent processing:
-- `mzml_cache_directory` - The cache directory to use when converting raw files to mzML. Default: `/data/mass_spec/nextflow/nf-openmod-dda/mzml_cache`
-- `panorama_cache_directory` - The cache directory to use when downloading raw files from PanoramaWeb. Default: `/data/mass_spec/nextflow/panorama/raw_cache`
+You need [Nextflow](https://www.nextflow.io/) (25.10 or newer) and Docker. The simplest
+start is a config file — see [`resources/pipeline.config`](resources/pipeline.config) for a
+fully-commented example:
 
-## How To Use
-Use the following command(s) to run the workflow:
+```bash
+nextflow run mriffle/nf-openmod-dda -r main -profile standard -c pipeline.config
+```
 
-- To ensure latest version of workflow is installed:
+At minimum you set `fasta`, `spectra_dir`, and `magnum_conf`. The `standard` profile runs
+locally; `slurm` and `aws` are also provided. Reading from PanoramaWeb or uploading to
+Limelight requires credentials stored as Nextflow secrets.
 
-  `nextflow pull -r main mriffle/nf-openmod-dda`
+**For the full parameter reference, profiles, secrets, and output layout, see the
+[documentation](https://nf-openmod-dda.readthedocs.io/).**
 
-- To run the workflow specifying parameters on command line:
+## For the technically curious
 
-  `nextflow run -r main mriffle/nf-openmod-dda --magnum_conf /path/to/Magnum.conf --spectra_dir /path/to/mzml_files --fasta /path/to/file.fasta`
+### Architecture
 
-- To run workflow using a configuration file:
+The code is layered, most-authoritative first:
 
-  Create configuration file called `pipeline.config` in this example (can be called anything). You can put any of the parameters above in it as:
+- **`main.nf`** — top-level routing: resolves inputs (local vs PanoramaWeb), validates
+  decoys, optionally generates them, then dispatches to one of two subworkflows.
+- **`workflows/*.nf`** — the two processing strategies (combined vs separate; see below).
+- **`modules/*.nf`** — one process per bounded operation (Magnum, Percolator, msconvert,
+  YARP, Limelight convert/upload, the Panorama client, the PIN helpers, decoy validation).
+- **config layer** — `nextflow.config` (params, profiles, secrets, reports),
+  `conf/base.config` (label-based resource policy), `container_images.config`
+  (tool → image map), and `nextflow_schema.json` (parameter validation via
+  [nf-schema](https://nextflow-io.github.io/nf-schema/)).
 
+### Combined vs separate
+
+The central mode switch is `process_separately`:
+
+- **Combined** (default): Magnum runs per file, all Percolator-input (PIN) files are
+  merged, and Percolator + Limelight run **once** over the pooled data — better joint statistics.
+- **Separate**: per-file identity is preserved end to end via keyed tuples, so Percolator
+  and Limelight run **per file** — easier to compare individual runs.
+
+### Patterns
+
+- **Containers are indirection.** Each module declares `container params.images.<tool>`;
+  concrete image tags live only in `container_images.config`.
+- **Resources are label-driven.** Processes carry labels (`process_low`, `process_high_memory`, …)
+  defined in `conf/base.config`; each profile sets `process.resourceLimits` to clamp requests
+  to the executor's real ceiling.
+- **Data flows as `tuple(sample_id, …)`** keyed on file basename; the mode-specific joins
+  depend on those keys.
+- **`https://` means PanoramaWeb.** Any input path starting with `https://` is treated as a
+  PanoramaWeb WebDAV URL; results are published under the configured `result_dir`, organized
+  by tool/stage.
+
+The workflow targets Nextflow's strict configuration/script language, is kept error-free
+under `nextflow lint`, and is validated against Nextflow 25.10 and 26.04.
+
+### Testing
+
+- **`test/run-tests.sh`** is a self-contained, Docker-free harness. It downloads the
+  Nextflow launcher and each pinned engine into a local directory, then runs — for every
+  supported version — `nextflow lint`, stub runs of both modes (wiring and per-sample
+  fan-out), and the real shell-based steps: `FILTER_PIN_COLUMNS` (multi-protein handling
+  plus its error paths) and `VALIDATE_DECOY_OPTIONS` (its accept/reject matrix).
+
+  ```bash
+  test/run-tests.sh                                      # all pinned versions
+  NXF_TEST_VERSIONS="25.10.4 26.04.0" test/run-tests.sh  # override versions
   ```
-  params {
-    magnum_conf = '/path/to/Magnum.conf'
-    fasta = '/path/to/file.fasta'
-    spectra_dir  = '/path/to/mzml_files'
-    
-    limelight_upload = true
-    limelight_webapp_url = 'change to your limelight URL'
-    limelight_search_description = 'Open mod search of yeast grown in space.'
-    limelight_search_short_name = 'spaceyeast'
-    limelight_tags = 'space,yeast,magnum,percolator'
-  }
-  ```
 
-  Then run the workflow using:
+- **GitHub Actions** runs that harness across Nextflow 25.10 and 26.04 in parallel, plus a
+  Docker-based **smoke matrix** that exercises the real toolchain (Magnum, Percolator, YARP,
+  msconvert) end to end on small committed test data in `test-data/`.
 
-  `nextflow run -r main mriffle/nf-openmod-dda -c pipeline.config`
+## License
 
-## Output
-The output of the pipeline will be placed in the `results/nf-openmod-dda` directory (relative to where the workflow was run). `BASENAME` is the base part of the mzML or raw filename (e.g., `my_file.raw` would have a `BASENAME` of `my_file`):
-
-- `magnum/magnum_fixed.conf` - Magnum conf file after modification by the workflow (adding in the FASTA and mzML files).
-- `magnum/BASENAME.pep.xml` - Magnum results in PepXML format.
-- `magnum/BASENAME.perc.txt` - Magnum results as input to Percolator.
-
-If `process_separately` is `false` (default):
-- `percolator/combined.filtered.pin` - Percolator input file resulting from combining all percolator input files.
-- `percolator/combined.filtered.pout.xml` - Percolator PSM and peptide results for the combined data.
-- `limelight/results.limelight.xml` - The Limelight XML representation of the combined results (if uploading to Limelight).
-
-If `process_separately` is `true`:
-- `percolator/BASENAME.filtered.pin` - Percolator input file for each respective input file.
-- `percolator/BASENAME.filtered.pout.xml` - Percolator PSM and peptide results for each respective input file.
-- `limelight/BASENAME.limelight.xml` - The Limelight XML representation of the results for each respective input file (if uploading to Limelight).
-
-## Limelight Integration
-To upload results to Limelight, you must first set up your Limelight credentials. To find your api key, expand the "Upload Data" section on the project page and and click the "Command Line Import Info" button. Then enter the following on your command line (where the workflow is being run):
-
-   `nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "api key from Limelight"`
-
-## PanoramaWeb Integration
-1. To use PanoramaWeb as the source for input files, you must first set up your PanoramaWeb credentials. After finding your API KEY in PanoramaWeb save it to Nextflow by typing:
-
-   `nextflow secrets set PANORAMA_API_KEY "api key from PanoramaWeb"`
-
-2. All file locations that begin with `https://` are assumed to be PanoramaWeb WebDAV URLs. To specify PanoramaWeb locations for all input files, the following `pipeline.config` file could be used:
-
-    ```
-    params {
-        magnum_conf = '/path/to/Magnum.conf'
-        fasta = 'https://panoramaweb.org/_webdav/FOLDER_PATH/@files/myname.fasta'
-        spectra_dir  = 'https://panoramaweb.org/_webdav/FOLDER_PATH/@files/FOLDER_NAME/'
-    }
-    ```
-    Note: it is not required that all files be in PanoramaWeb, mixing local and PanoramaWeb files will work.
+See [LICENSE](LICENSE).

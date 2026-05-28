@@ -14,3 +14,7 @@ reports/
 
 venv/
 .claude/
+
+# Test harness (vendored Nextflow + scratch run dirs)
+/test/.nextflow-dist/
+/test/.work/

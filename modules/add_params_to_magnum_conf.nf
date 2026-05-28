@@ -1,6 +1,6 @@
 process ADD_PARAMS_TO_MAGNUM_CONF {
-    publishDir "${params.result_dir}/magnum/${sample_id}", failOnError: true, mode: 'copy', pattern: '*.stderr'
-    publishDir "${params.result_dir}/magnum/${sample_id}", failOnError: true, mode: 'copy', pattern: '*.conf'
+    publishDir { "${params.result_dir}/magnum/${sample_id}" }, failOnError: true, mode: 'copy', pattern: '*.stderr'
+    publishDir { "${params.result_dir}/magnum/${sample_id}" }, failOnError: true, mode: 'copy', pattern: '*.conf'
     label 'process_low_constant'
     container params.images.ubuntu
 

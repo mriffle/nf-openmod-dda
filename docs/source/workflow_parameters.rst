@@ -40,7 +40,7 @@ Below is a complete description of all parameters that may be included in these 
 
     .. code-block:: bash
 
-        quant_spectra_dir= 'https://panoramaweb.org/_webdav/path/to/@files/RawFiles/'
+        spectra_dir = 'https://panoramaweb.org/_webdav/path/to/@files/RawFiles/'
 
 
     Where, ``https://panoramaweb.org/_webdav/path/to/@files/RawFiles/`` is the WebDav URL of the folder on the Panorama server.
@@ -115,9 +115,8 @@ The example configuration file includes this ``profiles`` section:
         // your system resources (that you are willing to devote to running
         // workflow jobs).
         standard {
-            params.max_memory = '8.GB'
-            params.max_cpus = 4
-            params.max_time = '240.h'
+            // cap per-task resource requests to what this machine provides
+            process.resourceLimits = [ cpus: 4, memory: 8.GB, time: 240.h ]
 
             params.mzml_cache_directory = '/data/mass_spec/nextflow/nf-teirex-dda/mzml_cache'
             params.panorama_cache_directory = '/data/mass_spec/nextflow/panorama/raw_cache'
@@ -134,14 +133,8 @@ These parameters describe the capability of your local computer for running the 
      - Parameter Name
      - Description
    * - ✓
-     - ``params.max_memory``
-     - The maximum amount of RAM that may be used by steps of the workflow. Default: 8 gigabytes.
-   * - ✓
-     - ``params.max_cpus``
-     - The number of cores that may be used by the workflow. Default: 4 cores.
-   * - ✓
-     - ``params.max_time``
-     - The maximum amount of a time a step in the workflow may run before it is stopped and error generated. Default: 240 hours.
+     - ``process.resourceLimits``
+     - A map capping the CPUs, memory, and time any single workflow step may request, e.g. ``[ cpus: 4, memory: 8.GB, time: 240.h ]``. Set this to match the resources of the machine (or queue) running the workflow; per-process requests are clamped to these ceilings.
    * - ✓
      - ``params.mzml_cache_directory``
      - When ``msconvert`` converts a RAW file to mzML, the mzML file is cached for future use. This specifies the directory in which the cached mzML files are stored.

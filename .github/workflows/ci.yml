@@ -6,44 +6,51 @@ on:
       - main
 
 jobs:
-  stub-tests:
-    name: Stub Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Install Nextflow
-        run: |
-          curl -s https://get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Set Nextflow secrets
-        run: |
-          nextflow secrets set PANORAMA_API_KEY "PLACEHOLDER"
-          nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "PLACEHOLDER"
-
-      - name: Run combined stub tests
-        run: nextflow run main.nf -profile standard -stub -c conf/test_combined.config
-
-      - name: Run separate stub tests
-        run: nextflow run main.nf -profile standard -stub -c conf/test_separate.config
-
-  smoke-tests:
-    name: Smoke Tests
+  # Docker-free harness: lint + stub workflow runs + real FILTER_PIN_COLUMNS /
+  # VALIDATE_DECOY_OPTIONS tests. The supported Nextflow versions run as parallel
+  # matrix jobs (first entry of NXF_TEST_VERSIONS is the supported floor).
+  harness:
+    name: Harness (Nextflow ${{ matrix.nextflow }})
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        include:
+        nextflow: ['25.10.4', '26.04.0']
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Nextflow launcher + engine
+        uses: actions/cache@v4
+        with:
+          path: test/.nextflow-dist
+          key: nxf-dist-${{ matrix.nextflow }}
+
+      - name: Run test harness (Nextflow ${{ matrix.nextflow }})
+        run: NXF_TEST_VERSIONS="${{ matrix.nextflow }}" bash test/run-tests.sh
+
+  # Real-tool, end-to-end coverage (needs Docker). Each smoke config runs against
+  # both supported Nextflow versions in parallel.
+  smoke-tests:
+    name: Smoke (${{ matrix.test.name }}, NF ${{ matrix.nextflow }})
+    runs-on: ubuntu-latest
+
+    env:
+      NXF_VER: ${{ matrix.nextflow }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        nextflow: ['25.10.4', '26.04.0']
+        test:
           - name: single-decoys
             config: conf/smoke_single_decoys.config
           - name: single-generate-decoys
@@ -57,10 +64,10 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -75,5 +82,5 @@ jobs:
           nextflow secrets set PANORAMA_API_KEY "PLACEHOLDER"
           nextflow secrets set LIMELIGHT_SUBMIT_UPLOAD_KEY "PLACEHOLDER"
 
-      - name: Run smoke test (${{ matrix.name }})
-        run: nextflow run main.nf -profile standard -c ${{ matrix.config }}
+      - name: Run smoke test (${{ matrix.test.name }}, NF ${{ matrix.nextflow }})
+        run: nextflow run main.nf -profile standard -c ${{ matrix.test.config }}

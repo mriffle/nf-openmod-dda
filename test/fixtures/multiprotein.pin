@@ -1,0 +1,4 @@
+SpecId	Label	ScanNr	lnrSp	deltLCn	Mass	Peptide	Proteins
+psm1	1	10	0.5	0.10	1200.5	K.PEPTIDE.R	sp|P1|A
+psm2	1	11	0.6	0.20	1300.6	K.SHARED.R	sp|P1|A	sp|P2|B	sp|P3|C
+psm3	-1	12	0.4	0.05	1100.4	K.DECOYPEP.R	DECOY_sp|P9|Z	DECOY_sp|P8|Y

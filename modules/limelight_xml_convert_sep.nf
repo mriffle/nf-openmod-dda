@@ -1,10 +1,10 @@
 def exec_java_command(mem) {
     def xmx = "-Xmx${mem.toGiga()-1}G"
-    return "java -Djava.aws.headless=true ${xmx} -jar /usr/local/bin/magnumToLimelightXML.jar"
+    return "java -Djava.awt.headless=true ${xmx} -jar /usr/local/bin/magnumToLimelightXML.jar"
 }
 
 process CONVERT_TO_LIMELIGHT_XML_SEP {
-    publishDir "${params.result_dir}/limelight/${sample_id}", failOnError: true, mode: 'copy'
+    publishDir { "${params.result_dir}/limelight/${sample_id}" }, failOnError: true, mode: 'copy'
     label 'process_low'
     label 'process_high_memory'
     label 'process_long'

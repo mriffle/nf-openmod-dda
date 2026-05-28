@@ -23,7 +23,7 @@ workflow wf_magnum_combined_percolator {
         // convert raw files to mzML files if necessary
         if(from_raw_files) {
             MSCONVERT(spectra_file_ch)
-            mzml_file_ch = MSCONVERT.out.mzml.map { it[1] } // extract file from tuple
+            mzml_file_ch = MSCONVERT.out.mzml.map { row -> row[1] } // extract file from tuple
         } else {
             mzml_file_ch = spectra_file_ch
         }
@@ -33,7 +33,7 @@ workflow wf_magnum_combined_percolator {
 
         MAGNUM(ADD_PARAMS_TO_MAGNUM_CONF.out.magnum_job_tuple, fasta)
 
-        pin_files = MAGNUM.out.pin.map { it[1] }.collect()
+        pin_files = MAGNUM.out.pin.map { row -> row[1] }.collect()
 
         COMBINE_PIN_FILES(pin_files)
 
@@ -49,8 +49,8 @@ workflow wf_magnum_combined_percolator {
         if (params.limelight_upload) {
 
             LIMELIGHT_XML_CONVERT(
-                MAGNUM.out.pepxml.map { it[1] }.collect(),
-                PERCOLATOR.out.pout.map { it[1] },
+                MAGNUM.out.pepxml.map { row -> row[1] }.collect(),
+                PERCOLATOR.out.pout.map { row -> row[1] },
                 fasta,
                 magnum_conf
             )

@@ -6,7 +6,6 @@ include { validateParameters } from 'plugin/nf-schema'
 
 // modules
 include { PANORAMA_GET_FASTA } from "./modules/panorama"
-include { PANORAMA_GET_COMET_PARAMS } from "./modules/panorama"
 include { PANORAMA_GET_MAGNUM_CONF } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE } from "./modules/panorama"
 include { PANORAMA_GET_RAW_FILE_LIST } from "./modules/panorama"
@@ -26,17 +25,51 @@ def normalize_pin_columns_to_remove(pin_columns_param) {
         return pin_columns_param
             .toString()
             .split(',')
-            .collect { it.trim() }
-            .findAll { it }
+            .collect { col -> col.trim() }
+            .findAll { col -> col }
     }
 
     if (pin_columns_param instanceof Collection) {
         return pin_columns_param
-            .collect { it.toString().trim() }
-            .findAll { it }
+            .collect { col -> col.toString().trim() }
+            .findAll { col -> col }
     }
 
     error "Invalid value for --percolator_pin_columns_to_remove. Use a comma-delimited string or list of column names."
+}
+
+//
+// Render and (optionally) send a completion email. No-op unless params.email is set.
+//
+def send_completion_email() {
+    if( !params.email )
+        return
+
+    def status  = workflow.success ? 'SUCCESS' : 'FAILED'
+    def subject = "[${workflow.manifest.name}] ${status}: ${workflow.runName}"
+    def error_section = workflow.success
+        ? ''
+        : "<h3>Error</h3><pre>${workflow.errorReport ?: workflow.errorMessage ?: 'None'}</pre>"
+    def body = """\
+        <html><body>
+        <h2>${workflow.manifest.name} — ${status}</h2>
+        <ul>
+          <li>Run name: ${workflow.runName}</li>
+          <li>Started: ${workflow.start}</li>
+          <li>Completed: ${workflow.complete}</li>
+          <li>Duration: ${workflow.duration}</li>
+          <li>Exit status: ${workflow.exitStatus}</li>
+          <li>Command line: ${workflow.commandLine}</li>
+        </ul>
+        ${error_section}
+        </body></html>
+        """.stripIndent()
+
+    try {
+        sendMail(to: params.email, subject: subject, body: body)
+    } catch( Exception e ) {
+        println "Warning: Error sending completion email: ${e.message}"
+    }
 }
 
 //
@@ -44,8 +77,6 @@ def normalize_pin_columns_to_remove(pin_columns_param) {
 //
 workflow {
     validateParameters()
-
-    magnum_conf_ch = Channel.fromPath(params.magnum_conf)
 
     if(params.fasta.startsWith("https://")) {
         PANORAMA_GET_FASTA(params.fasta)
@@ -67,18 +98,18 @@ workflow {
 
     if(params.spectra_dir.contains("https://")) {
 
-        spectra_dirs_ch = Channel.from(params.spectra_dir)
-                                .splitText()               // split multiline input
-                                .map{ it.trim() }          // removing surrounding whitespace
-                                .filter{ it.length() > 0 } // skip empty lines
+        spectra_dirs_ch = channel.of(params.spectra_dir)
+                                .splitText()                 // split multiline input
+                                .map { line -> line.trim() } // remove surrounding whitespace
+                                .filter { line -> line.length() > 0 } // skip empty lines
 
         // get raw files from panorama
         PANORAMA_GET_RAW_FILE_LIST(spectra_dirs_ch)
         placeholder_ch = PANORAMA_GET_RAW_FILE_LIST.out.raw_file_placeholders.transpose()
         PANORAMA_GET_RAW_FILE(placeholder_ch)
-        
+
         spectra_files_ch = PANORAMA_GET_RAW_FILE.out.panorama_file
-        from_raw_files = true;
+        from_raw_files = true
 
     } else {
 
@@ -95,11 +126,11 @@ workflow {
         }
 
         if(mzml_files.size() > 0) {
-                spectra_files_ch = Channel.fromList(mzml_files)
-                from_raw_files = false;
+                spectra_files_ch = channel.fromList(mzml_files)
+                from_raw_files = false
         } else {
-                spectra_files_ch = Channel.fromList(raw_files)
-                from_raw_files = true;
+                spectra_files_ch = channel.fromList(raw_files)
+                from_raw_files = true
         }
     }
 
@@ -130,36 +161,9 @@ workflow {
         )
     }
 
-}
-
-//
-// Used for email notifications
-//
-def email() {
-    // Create the email text:
-    def (subject, msg) = EmailTemplate.email(workflow, params)
-    // Send the email:
-    if (params.email) {
-        sendMail(
-            to: "$params.email",
-            subject: subject,
-            body: msg
-        )
-    }
-}
-
-//
-// This is a dummy workflow for testing
-//
-workflow dummy {
-    println "This is a workflow that doesn't do anything."
-}
-
-// Email notifications:
-workflow.onComplete {
-    try {
-        email()
-    } catch (Exception e) {
-        println "Warning: Error sending completion email."
+    // Send a completion email if configured (registered inside the entry
+    // workflow as required by the Nextflow 25.10+/26 strict language).
+    workflow.onComplete {
+        send_completion_email()
     }
 }

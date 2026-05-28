@@ -1,5 +1,5 @@
 process FILTER_PIN_COLUMNS {
-    publishDir "${params.result_dir}/percolator/${sample_id}", failOnError: true, mode: 'copy'
+    publishDir { "${params.result_dir}/percolator/${sample_id}" }, failOnError: true, mode: 'copy'
     label 'process_low_constant'
     container params.images.ubuntu
 
@@ -12,7 +12,7 @@ process FILTER_PIN_COLUMNS {
         path("*.stderr"), emit: stderr
 
     script:
-    def normalized_columns = (columns_to_remove ?: []).collect { it.toString().trim() }.findAll { it }
+    def normalized_columns = (columns_to_remove ?: []).collect { col -> col.toString().trim() }.findAll { col -> col }
     def columns_file_contents = normalized_columns.join('\n')
     """
     cat << 'EOF' > columns_to_remove.txt
@@ -30,13 +30,14 @@ EOF
             close(cols_file)
         }
         NR == 1 {
+            # In a Magnum/Percolator PIN the trailing "Proteins" column is the last
+            # header column, but each PSM may list additional proteins as extra,
+            # header-less tab-separated columns. Treat everything from the protein
+            # column onward as a single tail that is always preserved, and only
+            # slice the columns before it.
+            pcol = NF
             for (i = 1; i <= NF; i++) {
                 headers[i] = \$i
-                if (headers[i] in remove) {
-                    drop[i] = 1
-                } else {
-                    keep[++k] = i
-                }
             }
 
             for (col in remove) {
@@ -53,8 +54,20 @@ EOF
                 }
             }
 
-            if (k < 1) {
-                print "ERROR: Filtering would remove all PIN columns." > "/dev/stderr"
+            if (headers[pcol] in remove) {
+                printf "ERROR: Refusing to remove the trailing protein column: %s\\n", headers[pcol] > "/dev/stderr"
+                err = 1
+            }
+
+            nkeep = 0
+            for (i = 1; i < pcol; i++) {
+                if (!(headers[i] in remove)) {
+                    keep[++nkeep] = i
+                }
+            }
+
+            if (nkeep < 1) {
+                print "ERROR: Filtering would remove all non-protein PIN columns." > "/dev/stderr"
                 err = 1
             }
 
@@ -63,11 +76,16 @@ EOF
             }
         }
         {
-            out = \$keep[1]
-            for (j = 2; j <= k; j++) {
-                out = out OFS \$keep[j]
+            out = ""
+            for (j = 1; j <= nkeep; j++) {
+                val = (keep[j] <= NF ? \$(keep[j]) : "")
+                out = (j == 1 ? val : out OFS val)
             }
-            print out
+            tail = (pcol <= NF ? \$(pcol) : "")
+            for (t = pcol + 1; t <= NF; t++) {
+                tail = tail OFS \$t
+            }
+            print out OFS tail
         }
     ' "${pin_file}" > "${sample_id}.columns_filtered.pin" 2> >(tee "${sample_id}.filter-pin.stderr" >&2)
     """

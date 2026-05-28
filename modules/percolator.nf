@@ -1,5 +1,5 @@
 process PERCOLATOR {
-    publishDir "${params.result_dir}/percolator/${sample_id}", failOnError: true, mode: 'copy'
+    publishDir { "${params.result_dir}/percolator/${sample_id}" }, failOnError: true, mode: 'copy'
     label 'process_medium'
     label 'process_high_memory'
     container params.images.percolator
