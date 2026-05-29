@@ -13,9 +13,12 @@ process COMBINE_PIN_FILES {
     script:
     """
     echo "Combining percolator input files..."
+    # Redirect stderr straight to the declared output file (created synchronously)
+    # rather than via an async `>(tee ...)` process substitution, which can fail to
+    # create the file before Nextflow collects outputs when the command is fast.
     python3 /usr/local/bin/combine-percolator-input-files.py \
     ${pin_files} \
-    >combined.filtered.pin 2>> >(tee combine-pin.stderr >&2)
+    >combined.filtered.pin 2> combine-pin.stderr
     echo "Done!" # Needed for proper exit
     """
 

@@ -163,6 +163,8 @@ test_filter_preserves_proteins() {
             ) > "$ld/out.txt" 2>&1; then
         local out="$ld/results/percolator/sample/sample.columns_filtered.pin"
         if [ ! -f "$out" ]; then fail "filter: output not produced" "$ld/out.txt"; return; fi
+        if [ ! -f "$ld/results/percolator/sample/sample.filter-pin.stderr" ]; then
+            fail "filter: .stderr output not produced" "$ld/out.txt"; return; fi
         # 'Mass' must be gone from the header
         if head -n1 "$out" | tr '\t' '\n' | grep -qx 'Mass'; then
             fail "filter: removed column 'Mass' still present" "$out"; return; fi

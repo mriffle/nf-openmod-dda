@@ -87,7 +87,7 @@ EOF
             }
             print out OFS tail
         }
-    ' "${pin_file}" > "${sample_id}.columns_filtered.pin" 2> >(tee "${sample_id}.filter-pin.stderr" >&2)
+    ' "${pin_file}" > "${sample_id}.columns_filtered.pin" 2> "${sample_id}.filter-pin.stderr"
     """
 
     stub:

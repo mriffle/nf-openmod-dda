@@ -153,8 +153,10 @@ and the thing most easily broken by careless edits:
   trailing `echo` to flush). This pattern is **racy**: for a fast command that emits
   nothing, the async `tee` may not create the declared output file before Nextflow
   collects outputs — this broke `ADD_PARAMS_TO_MAGNUM_CONF` on NF26. For fast/quiet
-  commands, redirect straight to the file (`2> x.stderr`) instead of teeing; reserve the
-  tee pattern for slower tools (and see open issue P5).
+  commands, redirect straight to the file (`2> x.stderr`) instead of teeing (this bit
+  `ADD_PARAMS_TO_MAGNUM_CONF`, `FILTER_PIN_COLUMNS`, and `COMBINE_PIN_FILES` on NF26, now
+  all fixed); reserve the tee pattern for slower tools where live streaming is useful and
+  the race doesn't occur (see P5).
 - **PIN format:** Magnum/Percolator PIN files list a PSM's extra proteins as
   additional **header-less, tab-separated columns** at the end of the row, so data
   rows can have more fields than the header. `FILTER_PIN_COLUMNS` slices only the
@@ -237,7 +239,7 @@ when found, move to Resolved when fixed.
 | P2 | Low | panorama | Panorama raw download relies on a trailing slash in the WebDAV URL (`${url}${name}`, unvalidated); only `.raw` files are ever enumerated. |
 | P3 | Low | portability | MAGNUM uses GNU-specific `sed -i`/`\s`; relies on the magnum image shipping GNU sed. |
 | P4 | Low | resources | `-Xmx${mem.toGiga()-1}G` underflows to 0/negative if any label ever assigns <2 GB (currently safe; smallest label is 8 GB). |
-| P5 | Med | shell | Modules capture required `.stdout`/`.stderr` outputs via an async `> >(tee ...)` process substitution, which can fail to create the file before Nextflow collects outputs. `ADD_PARAMS_TO_MAGNUM_CONF` was fixed (direct redirect); the slower-tool modules (Magnum, Percolator, Panorama, Limelight, COMBINE, YARP, FILTER) still use the pattern and remain latently exposed (lower risk — their tools run long enough for `tee` to create the files). |
+| P5 | Low | shell | The slow real-tool modules (Magnum, Percolator, Panorama, Limelight) still capture `.stdout`/`.stderr` via `> >(tee ...)` process substitution. This is intentional (live streaming to `.command.out/.err` during long runs) and does not race in practice — those tools run long enough for `tee` to create the files before output collection. Only fast/quiet commands need the synchronous-redirect treatment. |
 | T2 | Low | testing | The real-tool **smoke** matrix asserts only that the run completes, not output counts/content. (The Docker-free harness now asserts published-output existence and real `FILTER_PIN_COLUMNS`/`VALIDATE_DECOY_OPTIONS` behavior.) |
 | T4 | Low | ci | CI (`harness` + `smoke-tests` jobs) runs only on `push` to `main`; there is no `pull_request` trigger, so changes aren't gated before landing. The Docker-free `harness` job is the natural PR gate. |
 
@@ -255,5 +257,5 @@ when found, move to Resolved when fixed.
 | C5 | docs | Fixed `nextflow.config` header docstring (was "nf-maccoss-trex" / "data-ind…"). |
 | D2 | docs | Fixed `docs/source/workflow_parameters.rst` example `quant_spectra_dir`→`spectra_dir`. |
 | D1 | docs | README rewritten; removed the inaccurate hard-coded "Output" path section (output layout now lives in the readthedocs docs). |
-| P5a | shell | `ADD_PARAMS_TO_MAGNUM_CONF` dropped its `.stderr` output on NF26 (the async `>(tee ...)` hadn't created the file before output collection, since the two seds are instant and silent) — switched to synchronous `2>`/`2>>` redirection. The harness now runs the real process and asserts both outputs. Remaining modules tracked as P5. |
+| P5a | shell | Fast/quiet shell helpers dropped a declared `.stderr` output on NF26 — the async `>(tee ...)` hadn't created the file before output collection because the command (sed/awk/python) finished instantly. Fixed `ADD_PARAMS_TO_MAGNUM_CONF`, `FILTER_PIN_COLUMNS`, and `COMBINE_PIN_FILES` to redirect stderr synchronously (`2>`/`2>>`). The harness runs the real `ADD_PARAMS`/`FILTER` processes and asserts their `.stderr` (+ `.conf`/`.pin`) outputs. Slow-tool modules intentionally keep `tee` (P5). |
 | T3 | testing | Multi-protein `FILTER_PIN_COLUMNS` behavior is now covered by `test/run-tests.sh` (real process on `test/fixtures/multiprotein.pin`, plus both error paths). |
