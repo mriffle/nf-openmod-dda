@@ -58,16 +58,16 @@ The ``params`` Section
      - Description
    * - ✓
      - ``spectra_dir``
-     - That path to the location of the raw or mzML files to be processed. This can be a directory location (e.g., ``/data/mass_spec/my_raw_files/`` or a Panorama WebDAV URL (described above).
+     - The path to the location of the raw or mzML files to be processed. This can be a directory location (e.g., ``/data/mass_spec/my_raw_files/``) or a Panorama WebDAV URL (described above).
    * - ✓
      - ``fasta``
-     - That path to the location of the FASTA file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/my.fasta`` or a Panorama WebDAV URL (described above).
+     - The path to the location of the FASTA file to be used in the Magnum search. This can be a file location (e.g., ``/data/mass_spec/my.fasta``) or a Panorama WebDAV URL (described above).
    * - 
      - ``generate_decoys``
      - If ``true``, the workflow will generate decoys using `yarp <https://github.com/mriffle/yarp>`_. If ``false``, decoys must already be present in the FASTA file and ``Magnum.conf`` must be told the decoy prefix. Default: ``false``.
    * - 
      - ``magnum_conf``
-     - That path to the location of the Magnum configuration file to be used in the Magnum search. This can be a directory location (e.g., ``/data/mass_spec/Magnum.conf`` or a Panorama WebDAV URL (described above). Default: ``'Magnum.conf'``.
+     - The path to the location of the Magnum configuration file to be used in the Magnum search. This can be a file location (e.g., ``/data/mass_spec/Magnum.conf``) or a Panorama WebDAV URL (described above). Default: ``'Magnum.conf'``.
    * - 
      - ``process_separately``
      - Set to ``true`` to run Percolator and Limelight upload separately for each input file. If ``false``, results are combined before running Percolator and uploading to Limelight. Default: ``false``.
@@ -80,7 +80,7 @@ The ``params`` Section
      - Optional list of PIN header names to remove before Percolator runs. Provide as a list (e.g., ``['delta_score', 'mod_mass']``) or as a comma-delimited string. Leave empty to disable filtering. Default: ``[]``.
    * - 
      - ``limelight_upload``
-     - Set to ``'true'`` to upload to Limelight. If set to ``true``, the following Limelight-related parameters apply. Default: ``false``.
+     - Set to ``true`` to upload to Limelight. If set to ``true``, the following Limelight-related parameters apply. Default: ``false``.
    * - 
      - ``limelight_project_id``
      - This is required if ``limelight_upload`` is set to ``true``. This is the Limelight project ID to which to upload data.
@@ -122,7 +122,7 @@ The example configuration file includes this ``profiles`` section:
         // workflow jobs).
         standard {
             // cap per-task resource requests to what this machine provides
-            process.resourceLimits = [ cpus: 4, memory: 8.GB, time: 240.h ]
+            process.resourceLimits = [ cpus: 8, memory: 16.GB, time: 240.h ]
 
             params.mzml_cache_directory = '/data/mass_spec/nextflow/nf-openmod-dda/mzml_cache'
             params.panorama_cache_directory = '/data/mass_spec/nextflow/panorama/raw_cache'
@@ -140,13 +140,30 @@ These parameters describe the capability of your local computer for running the 
      - Description
    * - ✓
      - ``process.resourceLimits``
-     - A map capping the CPUs, memory, and time any single workflow step may request, e.g. ``[ cpus: 4, memory: 8.GB, time: 240.h ]``. Set this to match the resources of the machine (or queue) running the workflow; per-process requests are clamped to these ceilings.
+     - A map capping the CPUs, memory, and time any single workflow step may request, e.g. ``[ cpus: 8, memory: 16.GB, time: 240.h ]``. Set this to match the resources of the machine (or queue) running the workflow; per-process requests are clamped to these ceilings.
    * - ✓
      - ``params.mzml_cache_directory``
      - When ``msconvert`` converts a RAW file to mzML, the mzML file is cached for future use. This specifies the directory in which the cached mzML files are stored.
    * - ✓
      - ``params.panorama_cache_directory``
      - If the RAW files to be processed are in PanoramaWeb, the RAW files will be downloaded to and cached in this directory for future use.
+
+.. note::
+
+    The example above shows the ``standard`` profile, used to run the workflow locally. The
+    workflow also ships ``slurm`` and ``aws`` profiles, selected with ``-profile slurm`` or
+    ``-profile aws``. Each profile defines its own ``process.resourceLimits`` and cache
+    directories (the ``aws`` profile uses ``s3://`` cache locations); override these in your
+    config to match your cluster or AWS Batch compute environment. See :doc:`set_up_aws` for
+    running on AWS Batch.
+
+.. warning::
+
+    These caches are keyed only by output file **name**, not by content or conversion
+    settings. If you change msconvert options, or reuse a file name for different input
+    data, the workflow will reuse the previously cached file rather than regenerating it.
+    Clear the relevant cache directory (``mzml_cache_directory`` / ``panorama_cache_directory``)
+    when you change conversion settings or reuse file names.
 
 The ``mail`` Section
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -203,5 +220,5 @@ Below is a description of each parameter:
      - ``smtp.starttls.required``
      - Whether or not TLS is required.
    * - ✓
-     - ``smtp.ssl.protocols``
+     - ``mail.smtp.ssl.protocols``
      - SSL protocol to use for sending SMTP messages.

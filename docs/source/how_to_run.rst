@@ -125,5 +125,5 @@ Follow these steps to run a workflow:
 
 5. Retrieve results.
 
-   Your results will appear in the ``results`` sub directory of your current directory. See :doc:`results` for more
-   information about the results that are generated.
+   Your results will appear in the ``results/nf-openmod-dda`` sub directory of your current directory (configurable via
+   the ``result_dir`` parameter). See :doc:`results` for more information about the results that are generated.

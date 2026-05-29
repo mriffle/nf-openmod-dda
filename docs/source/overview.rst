@@ -15,7 +15,7 @@ The workflow is made up of the following software components, each may be run mu
 
 *  **msconvert** (https://proteowizard.sourceforge.io/)
 
-   If users supply RAW files as input, they will be converted to mzML using *msconvert*.
+   If users supply RAW files as input, they will be converted to mzML using *msconvert*. If a local input directory already contains mzML files, those are used directly and any RAW files are ignored.
 
 *  **Magnum** (https://magnum-ms.org/)
 
@@ -52,6 +52,6 @@ supply the locations of your data and execute a simple Nextflow command, such as
     nextflow run -resume -r main mriffle/nf-openmod-dda -c pipeline.config
 
 The entire workflow will be run automatically, downloading Docker images as necessary, and the results output to
-the ``results`` directory. See :doc:`how_to_install` for more details on how to install Nextflow and Docker. See 
+the ``results/nf-openmod-dda`` directory. See :doc:`how_to_install` for more details on how to install Nextflow and Docker. See
 :doc:`how_to_run` for more details on how to run the workflow. And see :doc:`results` for more details on how to
 retrieve the results.
