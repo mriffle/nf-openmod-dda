@@ -28,7 +28,7 @@ The workflow is made up of the following software components, each may be run mu
 
 * **Limelight XML Conversion** (https://github.com/yeastrc/limelight-import-magnum-percolator)
 
-   The Limelight XML converter converts the native output of Comet and Percolator to Limelight XML, suitable for import into Limelight. This
+   The Limelight XML converter converts the native output of Magnum and Percolator to Limelight XML, suitable for import into Limelight. This
    step will only run if uploading to Limelight is enabled.
 
 * **Limelight** (https://limelight-ms.org/)

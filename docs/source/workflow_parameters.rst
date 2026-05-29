@@ -98,9 +98,15 @@ The ``params`` Section
      - Optional comma-delimited list of Limelight tags to use for this search (e.g., ``'yeast,control,2023'``. Any tags present that haven't been created in Limelight will be created in Limelight. Note: You can also specify
        categories for tags, and tags with the same tag categories will be grouped together in Limelight. For example, one could have a tag category called ``treatment`` and tags called ``control`` or ``irradiated`` as
        tags within this tag category. To specify a tag category use the tag category name then a tilda (~) then the tag name. E.g., ``treatment~control,organism~yeast,year~2023``. Default: no tags will be sent.
-   * - 
+   * -
      - ``email``
      - The email address to which a notification should be sent upon workflow completion. If no email is specified, no email will be sent. To send email, you must configure mail server settings (see below).
+   * -
+     - ``result_dir``
+     - Directory where workflow results are published. Default: ``'results/nf-openmod-dda'``.
+   * -
+     - ``report_dir``
+     - Directory where Nextflow execution reports (timeline, report, trace) are written. Default: ``'reports/nf-openmod-dda'``.
 
 The ``profiles`` Section
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -118,7 +124,7 @@ The example configuration file includes this ``profiles`` section:
             // cap per-task resource requests to what this machine provides
             process.resourceLimits = [ cpus: 4, memory: 8.GB, time: 240.h ]
 
-            params.mzml_cache_directory = '/data/mass_spec/nextflow/nf-teirex-dda/mzml_cache'
+            params.mzml_cache_directory = '/data/mass_spec/nextflow/nf-openmod-dda/mzml_cache'
             params.panorama_cache_directory = '/data/mass_spec/nextflow/panorama/raw_cache'
         }
     }
@@ -165,7 +171,7 @@ The example configuration file includes this ``mail`` section:
 
 Below is a description of each parameter:
 
-.. list-table:: Parameters for the ``profiles/standard`` section
+.. list-table:: Parameters for the ``mail`` section
    :widths: 5 20 75
    :header-rows: 1
 

@@ -18,3 +18,6 @@ venv/
 # Test harness (vendored Nextflow + scratch run dirs)
 /test/.nextflow-dist/
 /test/.work/
+
+# Sphinx build output (generated from docs/source; ReadTheDocs builds from source)
+/docs/build/

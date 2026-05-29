@@ -88,8 +88,9 @@ under `nextflow lint`, and is validated against Nextflow 25.10 and 26.04.
 - **`test/run-tests.sh`** is a self-contained, Docker-free harness. It downloads the
   Nextflow launcher and each pinned engine into a local directory, then runs — for every
   supported version — `nextflow lint`, stub runs of both modes (wiring and per-sample
-  fan-out), and the real shell-based steps: `FILTER_PIN_COLUMNS` (multi-protein handling
-  plus its error paths) and `VALIDATE_DECOY_OPTIONS` (its accept/reject matrix).
+  fan-out), and the real shell-based steps: `ADD_PARAMS_TO_MAGNUM_CONF`, `FILTER_PIN_COLUMNS`
+  (multi-protein handling plus its error paths), and `VALIDATE_DECOY_OPTIONS` (its
+  accept/reject matrix).
 
   ```bash
   test/run-tests.sh                                      # all pinned versions

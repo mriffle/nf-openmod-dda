@@ -123,7 +123,7 @@ Follow these steps to run a workflow:
         how to set up a AWS Batch cluster and the resulting parameters to set in your ``pipeline.config`` file.
 
 
-4. Retrieve results.
+5. Retrieve results.
 
    Your results will appear in the ``results`` sub directory of your current directory. See :doc:`results` for more
    information about the results that are generated.
